@@ -1,0 +1,36 @@
+.DS_Store
+node_modules/
+package-lock.json
+__pycache__/
+*.pdf
+*.tif
+floorplan_full.png
+Image_2026*.png
+261113_mat1.png
+261113_mat2.png
+img/Image_1B0AF28E-B551-4259-8238-A14475E6FC65.png
+img/Image_22C2BC71-E1F6-439A-9BE2-988E480D3715.jpeg
+img/Image_5897CA7B-1E7A-45CB-B0C6-EA96261E54B3.png
+img/Image_602ED4AF-F404-41C1-AF2B-A3E3DC298BDD.png
+img/Image_72AEE71A-131E-45DE-BC09-7B83A2B0A469.png
+img/Image_84F75448-C621-4565-8F79-B2BD91B16B3F.png
+img/Image_CC5C634B-E2C7-474F-9844-490592699158.png
+img/Image_D493AA0B-E6DF-45EF-A6D2-D3F75C6BC586.png
+img/Image_E789E44A-9650-4BB2-B517-7485D5A0B54B.jpeg
+img/Image_E9425E82-1658-4A7E-B2E5-E5AB00CDCC51.png
+
+# 원본 근거 자료 (견적서 PDF·도면 TIF·시공사 자료 이미지).
+# 고객명·주소·연락처·업체명이 들어 있어 저장소에 올리지 않는다.
+sources/
+
+# .agent 초기화 스크립트가 만드는 빈 스텁 (이 프로젝트와 무관)
+.agent/skills/
+
+# 공개 배포본에 넣지 않는 비공개 판단 (정산 전략 메모 등)
+private/
+
+# macOS가 외장 드라이브·압축 해제 시 만드는 리소스 포크 파일
+._*
+
+# 시공사와의 카카오톡 대화 원본 (실명·주소·계좌 포함)
+kakao*.txt

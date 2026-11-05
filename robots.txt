@@ -1,0 +1,6 @@
+# 첫 화면만 수집을 허용해 검색엔진이 noindex 태그를 읽고 색인에서 빼게 한다.
+# 나머지(암호화 데이터·이미지·스크립트)는 수집하지 않는다.
+User-agent: *
+Allow: /$
+Allow: /index.html
+Disallow: /

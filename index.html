@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <!-- 개인 기록용 페이지이므로 검색엔진 색인에서 제외한다 (robots.txt와 함께 적용) -->
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>84㎡ 아파트 인테리어 공사 내역서</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="page">
+    <!-- 1. 요약: 금액은 비워 두고 app.js가 견적 JSON에서 채운다 -->
+    <header class="head">
+      <h1>84㎡ 아파트 인테리어 공사</h1>
+      <p id="headMeta">내역서를 불러오는 중…</p>
+    </header>
+
+    <!-- 공개 배포본은 데이터가 암호화되어 있어 비밀번호를 넣어야 열린다. 로컬 작업본에서는 보이지 않는다 -->
+    <form class="unlock" id="unlockForm" autocomplete="off">
+      <label for="unlockPassword">비밀번호</label>
+      <input type="password" id="unlockPassword" autocomplete="current-password" required />
+      <button type="submit" class="btn">열기</button>
+      <label class="remember"><input type="checkbox" id="unlockRemember" /> 이 기기에서 기억</label>
+      <p class="unlock-error" id="unlockError" role="alert"></p>
+    </form>
+
+    <section class="summary" id="summary" aria-label="공사 금액 요약" aria-busy="true">
+      <div class="card">
+        <div class="card-label">확정 금액 (부가세 포함)</div>
+        <div class="big num" id="sumTotal">-</div>
+        <div class="sub num" id="sumSupply"></div>
+        <div class="sub">11/5 최종 추가·정정 견적 기준</div>
+      </div>
+      <div class="card">
+        <div class="card-label">최초 계약 대비</div>
+        <div class="delta num" id="sumDelta">-</div>
+        <div class="sub num" id="sumDeltaSub"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">견적 변경 이력</div>
+        <ul class="hist num" id="sumHistory"></ul>
+      </div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="보기 전환">
+      <button type="button" role="tab" id="tab-items" aria-controls="panel-items" data-tab="items">내역<span class="count" id="cntItems"></span></button>
+      <button type="button" role="tab" id="tab-changes" aria-controls="panel-changes" data-tab="changes">변경<span class="count" id="cntChanges"></span></button>
+      <button type="button" role="tab" id="tab-schedule" aria-controls="panel-schedule" data-tab="schedule">일정<span class="count long" id="cntSchedule"></span></button>
+      <button type="button" role="tab" id="tab-specs" aria-controls="panel-specs" data-tab="specs">자재<span class="count long" id="cntSpecs"></span></button>
+    </nav>
+
+    <!-- 2. 내역: 도면 + 품목 -->
+    <section class="panel" id="panel-items" role="tabpanel" aria-labelledby="tab-items" tabindex="0">
+      <div class="explore">
+        <aside class="plan" id="plan">
+          <button type="button" class="plan-toggle" id="planToggle" aria-expanded="false">도면에서 구역 고르기 ▾</button>
+          <div class="plan-body">
+            <svg id="planSvg" viewBox="290 230 1080 1180" preserveAspectRatio="xMidYMid meet" role="img" aria-label="84제곱미터 세대 평면도. 구역을 누르면 그 공간의 품목만 보입니다">
+              <image href="./floorplan_unit.png" x="0" y="0" width="2200" height="1634" preserveAspectRatio="none" />
+              <g id="zones"></g>
+              <g id="zoneLabels"></g>
+            </svg>
+            <p class="plan-hint" id="planHint">구역을 누르면 그 공간의 품목만 보입니다. 한 번 더 누르면 해제됩니다.</p>
+          </div>
+        </aside>
+        <div class="explore-main">
+          <div class="filters">
+            <label class="search">
+              <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span class="sr-only">품목 검색</span>
+              <input id="searchInput" type="search" autocomplete="off" placeholder="품목·자재·구역 검색 (예: 칸스톤, 샷시, 화장실)" />
+            </label>
+            <div class="chips" id="tradeChips" role="group" aria-label="공종 선택"></div>
+          </div>
+          <div class="result-meta"><span id="resultCount"></span><span class="num" id="resultSum"></span></div>
+          <div id="itemList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 변경: 협의 경과 · 변경 요약 · 상판 비교 · 변경 품목 · 원가계산서 -->
+    <section class="panel" id="panel-changes" role="tabpanel" aria-labelledby="tab-changes" tabindex="0">
+      <div id="localBox"></div>
+      <h2 class="section-title">협의 경과</h2>
+      <div class="timeline" id="timeline"></div>
+      <h2 class="section-title">무엇이 바뀌었나 <small>최초 계약 대비 직접공사비</small></h2>
+      <div class="highlights" id="highlights"></div>
+      <h2 class="section-title">주방 상판 비교 <small>11/3 추가·정정 견적서의 두 안</small></h2>
+      <div class="table-wrap"><table class="compare" id="countertopCompare"></table></div>
+      <details class="fold" id="costStatement">
+        <summary><b>원가계산서</b><small>직접공사비에서 공급가액까지 산출 근거</small></summary>
+        <div class="table-wrap"><table class="compare" id="costTable"></table></div>
+      </details>
+      <h2 class="section-title">변경된 품목 <small id="changedCount"></small></h2>
+      <div id="changedList"></div>
+    </section>
+
+    <!-- 4. 일정 -->
+    <section class="panel" id="panel-schedule" role="tabpanel" aria-labelledby="tab-schedule" tabindex="0">
+      <p class="panel-lead" id="scheduleLead"></p>
+      <p class="sched-today" id="scheduleToday"></p>
+      <div class="gantt" id="gantt"></div>
+    </section>
+
+    <!-- 5. 자재 -->
+    <section class="panel" id="panel-specs" role="tabpanel" aria-labelledby="tab-specs" tabindex="0">
+      <div id="applianceBox"></div>
+      <h2 class="section-title">마감재 스펙</h2>
+      <div class="specs" id="specs"></div>
+      <h2 class="section-title">3D 시안</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <footer class="foot">
+      직접공사비에 산재보험료(노무비의 4.34%), 기타경비(5%), 일반관리비(6%), 기업이윤(10%)과 단수조정을 더해 공급가액을 산출합니다.
+    </footer>
+  </div>
+
+  <dialog id="imageDialog" class="image-dialog" aria-labelledby="imageDialogTitle">
+    <form method="dialog"><button class="dialog-close" aria-label="닫기">닫기</button></form>
+    <img id="imageDialogImg" src="" alt="" />
+    <p id="imageDialogTitle"></p>
+  </dialog>
+
+  <script src="./app.js"></script>
+</body>
+</html>
