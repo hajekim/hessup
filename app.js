@@ -178,7 +178,7 @@ function renderSummary() {
   if (isWorkMode()) {
     const base = data.cost_summary.base_v1_summary;
     const added = data.cost_summary.added_summary;
-    $('headMeta').textContent = `최초 내역 ${base.quote_number} · 최종 확정 ${added.quote_number} (${fmtDate(added.quote_date)} 확정 · 시공 공유용)`;
+    $('headMeta').textContent = `최초 내역 ${base.quote_number} · 최종 확정 ${added.quote_number} (${fmtDate(added.quote_date)} 확정 · 2026. 11. 09 현장 업데이트 · 시공 공유용)`;
     const phases = state.content.CONSTRUCTION_SCHEDULE_PHASES || [];
     if (phases.length > 0) {
       const totalDays = Math.max(...phases.map(p => p.startOffset + p.spanDays));
@@ -203,7 +203,7 @@ function renderSummary() {
   const added = data.cost_summary.added_summary;
   const first = state.quotes[FINAL_QUOTE.countertop];
   const firstAdded = first?.cost_summary?.added_summary;
-  $('headMeta').textContent = `최초 견적 ${base.quote_number}${firstAdded ? ` · 추가 견적 1차 ${firstAdded.quote_number}` : ''} · 2차 ${added.quote_number} (${fmtDate(added.quote_date)} 확정)`;
+  $('headMeta').textContent = `최초 견적 ${base.quote_number}${firstAdded ? ` · 추가 견적 1차 ${firstAdded.quote_number}` : ''} · 2차 ${added.quote_number} (${fmtDate(added.quote_date)} 확정 · 2026. 11. 09 현장 업데이트)`;
   $('sumTotal').textContent = fmtKRW(sheet.total);
   $('sumSupply').textContent = `공급가 ${fmtKRW(sheet.supply)} · 부가세 ${fmtKRW(sheet.vat)}`;
   // 견적 날짜별 부가세 포함 총액을 한 줄씩. 마지막 줄이 현재 확정 금액이다
