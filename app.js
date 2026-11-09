@@ -17,11 +17,13 @@ const DEFAULT_VERSION = FINAL_QUOTE.key;
 // 과거 협의안은 협의 경과 타임라인에만 쓰므로 첫 화면을 그린 뒤 받아 온다
 const HISTORY_FILES = { v2: './hup_quote_202608018_v2.json', v3: './hup_quote_202608018_v3.json' };
 const SITE_CONTENT_FILE = './site_content.json';
+const WORK_DATA_FILE = './work_data.json';
 // 로컬 작업본에만 있는 확장 스크립트. 배포 서버에는 없으므로 404가 정상이다.
 const LOCAL_EXTENSION_FILE = './private/local.js';
 const VAT_RATE = 0.1;
 const COUNTERTOP_ITEMS = ['2-h-12', '2-h-08', '2-h-09'];
 const TABS = ['items', 'changes', 'schedule', 'specs'];
+const isWorkMode = () => document.body?.dataset?.mode === 'work';
 
 const state = {
   version: DEFAULT_VERSION,
@@ -63,13 +65,16 @@ const tradeCode = it => `${it.section_code}-${it.category_code}`;
 const isCommon = it => (it.rooms || []).includes('전체');
 const itemCost = it => it.price?.total_cost || 0;
 const sumCost = list => list.reduce((acc, it) => acc + itemCost(it), 0);
+const isActiveWorkItem = it => it.customer_supplied || (it.change_status !== 'cancelled' && it.change_status !== 'deleted_partial_deduction');
+const activeItems = data => (isWorkMode() ? data.items.filter(isActiveWorkItem) : data.items);
 
 // 품목 옆 배지. 0원 추가·업그레이드도 데이터 분류대로 '추가'·'변경'으로만 적는다.
 function changeBadge(it) {
+  if (isWorkMode() && it.customer_supplied) return { text: '고객지급', cls: 'b-add' };
   const cs = it.change_status || 'normal';
   if (cs === 'added' || cs === 'service_added') return { text: '추가', cls: 'b-add' };
   if (cs === 'cancelled') return { text: '취소', cls: 'b-cut' };
-  if (cs === 'deleted_partial_deduction') return { text: '감액', cls: 'b-cut' };
+  if (cs === 'deleted_partial_deduction') return { text: isWorkMode() ? '제외' : '감액', cls: 'b-cut' };
   if (cs === 'modified' || cs === 'service_upgraded') return { text: '변경', cls: 'b-mod' };
   return null;
 }
@@ -169,6 +174,28 @@ function sanitizeState() {
 /* ==================== 6. 요약 ==================== */
 function renderSummary() {
   const data = currentQuote();
+  const summary = $('summary');
+  if (isWorkMode()) {
+    const base = data.cost_summary.base_v1_summary;
+    const added = data.cost_summary.added_summary;
+    $('headMeta').textContent = `최초 내역 ${base.quote_number} · 최종 확정 ${added.quote_number} (${fmtDate(added.quote_date)} 확정 · 시공 공유용)`;
+    const phases = state.content.CONSTRUCTION_SCHEDULE_PHASES || [];
+    if (phases.length > 0) {
+      const totalDays = Math.max(...phases.map(p => p.startOffset + p.spanDays));
+      const start = phases[0].period.split('~')[0].trim();
+      const end = phases[phases.length - 1].period.split('~').pop().trim();
+      $('workSumPeriod').textContent = `${start} ~ ${end} (${totalDays}일)`;
+      $('workSumToday').textContent = scheduleTodayText(phases, scheduleTodayOffset(phases), totalDays);
+    }
+    const active = activeItems(data);
+    const changed = data.items.filter(changeBadge);
+    $('workSumItems').textContent = `시공 ${active.length}건 · 변경·추가·제외 ${changed.length}건`;
+    const apps = state.content.APPLIANCE_CHECKS?.rows || [];
+    const renders = state.content.ROOM_3D_RENDERINGS || [];
+    $('workSumSpecs').textContent = `가전 치수 ${apps.length}종 · 3D 시안 ${renders.length}컷`;
+    summary.setAttribute('aria-busy', 'false');
+    return;
+  }
   const sheet = readCostSheet(data);
   const base = data.cost_summary.base_v1_summary;
   const delta = sheet.total - base.final_total_with_vat;
@@ -188,7 +215,6 @@ function renderSummary() {
   $('sumDelta').className = `delta num ${delta > 0 ? 'up' : 'down'}`;
   $('sumDeltaSub').textContent = `${fmtKRW(base.final_total_with_vat)} → ${fmtKRW(sheet.total)}`;
 
-  const summary = $('summary');
   extensions.forEach(ext => ext.summary?.(summary, data));
   summary.setAttribute('aria-busy', 'false');
 }
@@ -204,15 +230,27 @@ function categoryList(data) {
 
 function rowHtml(it) {
   const badge = changeBadge(it);
-  const price = it.price || {};
   const ch = it.change_history || {};
-  const prev = ch.previous_total_cost ?? ch.previous_cost;
   const rooms = (it.rooms || []).map(r => (r === '전체' ? '세대 공통' : r)).join(' · ');
   const notes = [
     ch.previous_spec_raw && ch.previous_spec_raw !== it.spec_raw ? `변경 전: ${ch.previous_spec_raw}` : '',
     ch.reason ? `변경 사유: ${ch.reason}` : '',
     it.note_raw ? `비고: ${it.note_raw}` : ''
   ].filter(Boolean);
+  if (isWorkMode()) {
+    return `
+    <div class="row" role="button" tabindex="0" aria-expanded="false" data-item="${escapeHtml(it.id)}">
+      <div class="row-1"><span class="t">${escapeHtml(it.task)}</span>
+        <span class="a num">${escapeHtml(it.quantity)} ${escapeHtml(it.unit || '')}</span></div>
+      <div class="row-2">${badge ? `<span class="badge ${badge.cls}">${badge.text}</span>` : ''}<span>${escapeHtml(it.material || it.spec_raw || '')}</span><span>· ${escapeHtml(rooms)}</span></div>
+      <div class="detail num">
+        <span>수량 ${escapeHtml(it.quantity)} ${escapeHtml(it.unit || '')}</span><span>품목 ${escapeHtml(it.id)}</span>
+        ${notes.map(n => `<span class="note">${escapeHtml(n)}</span>`).join('')}
+      </div>
+    </div>`;
+  }
+  const price = it.price || {};
+  const prev = ch.previous_total_cost ?? ch.previous_cost;
   return `
     <div class="row" role="button" tabindex="0" aria-expanded="false" data-item="${escapeHtml(it.id)}">
       <div class="row-1"><span class="t">${escapeHtml(it.task)}</span>
@@ -231,7 +269,7 @@ function groupedHtml(items, data) {
     const list = items.filter(it => tradeCode(it) === cat.code);
     if (list.length === 0) return '';
     return `<div class="trade">
-      <div class="trade-head"><div><b>${escapeHtml(cat.name)}</b><span>${list.length}건</span></div><b class="num">${fmtKRW(sumCost(list))}</b></div>
+      <div class="trade-head"><div><b>${escapeHtml(cat.name)}</b><span>${list.length}건</span></div>${isWorkMode() ? '' : `<b class="num">${fmtKRW(sumCost(list))}</b>`}</div>
       ${list.map(rowHtml).join('')}
     </div>`;
   }).join('');
@@ -258,7 +296,7 @@ function renderItems() {
   const expanded = expandQuery(state.q);
   // 구역을 고르면 그 구역에 직접 지정된 품목만 본문에 두고, 세대 공통(구역별로 나눌 수 없는)
   // 품목은 아래 접힌 묶음으로 따로 보여준다. 세대 공통 품목이 모든 방에 해당하지는 않기 때문이다.
-  const searched = data.items.filter(it => itemMatchesSearch(it, expanded));
+  const searched = activeItems(data).filter(it => itemMatchesSearch(it, expanded));
   const direct = state.room ? searched.filter(it => (it.rooms || []).includes(state.room)) : searched;
   const common = state.room ? searched.filter(it => !(it.rooms || []).includes(state.room) && isCommon(it)) : [];
   const counts = direct.reduce((m, it) => ({ ...m, [tradeCode(it)]: (m[tradeCode(it)] || 0) + 1 }), {});
@@ -274,12 +312,12 @@ function renderItems() {
       `<button type="button" class="chip" data-trade="${c.code}" aria-pressed="${state.trade === c.code}">${escapeHtml(c.name.replace(/공사$/, ''))} ${counts[c.code]}</button>`).join('');
 
   $('resultCount').textContent = `${state.room ? `${state.room} ` : ''}${items.length}건${state.q ? ` · '${state.q}' 검색` : ''}`;
-  $('resultSum').textContent = `합계 ${fmtKRW(sumCost(items))}`;
+  $('resultSum').textContent = isWorkMode() ? '' : `합계 ${fmtKRW(sumCost(items))}`;
   $('itemList').innerHTML =
     (groupedHtml(items, data) || `<div class="empty">${state.room ? '이 구역에 직접 지정된 품목이 없습니다.' : '조건에 맞는 품목이 없습니다.'}</div>`) +
     (state.room && !state.trade && commonItems.length > 0 ? `
       <details class="fold" id="commonFold">
-        <summary><b>세대 공통 공정 ${commonItems.length}건</b><span class="num">${fmtKRW(sumCost(commonItems))}</span>
+        <summary><b>세대 공통 공정 ${commonItems.length}건</b>${isWorkMode() ? '' : `<span class="num">${fmtKRW(sumCost(commonItems))}</span>`}
           <small>철거·전기·목공·도배·장판처럼 집 전체에 걸쳐 있어 구역별로 나눌 수 없는 품목입니다. ${escapeHtml(state.room)}에 모두 해당하지는 않습니다.</small></summary>
         ${groupedHtml(commonItems, data)}
       </details>` : '');
@@ -339,9 +377,12 @@ function highlightAmount(highlight, itemsMap) {
 function renderHighlights() {
   const itemsMap = new Map(currentQuote().items.map(it => [it.id, it]));
   $('highlights').innerHTML = (state.content.CHANGE_HIGHLIGHTS || []).map(h => {
-    const amount = highlightAmount(h, itemsMap);
     // note는 직접 쓴 문구이고 <strong>만 허용한다
     const note = escapeHtml(h.note || '').replace(/&lt;(\/?)strong&gt;/g, '<$1strong>');
+    if (isWorkMode()) {
+      return `<div class="hl"><div class="card-label">${escapeHtml(h.title)}</div><p>${note}</p></div>`;
+    }
+    const amount = highlightAmount(h, itemsMap);
     return `<div class="hl"><div class="card-label">${escapeHtml(h.title)}</div>
       <div class="v num ${amount < 0 ? 'down' : 'up'}">${fmtSignedKRW(amount)}</div><p>${note}</p></div>`;
   }).join('');
@@ -393,6 +434,12 @@ function renderCostTable() {
 function renderChanges() {
   const data = currentQuote();
   const changed = data.items.filter(changeBadge);
+  if (isWorkMode()) {
+    renderHighlights();
+    $('changedCount').textContent = `${changed.length}건`;
+    $('changedList').innerHTML = groupedHtml(changed, data);
+    return;
+  }
   extensions.forEach(ext => ext.changes?.($('localBox'), data));
   renderTimeline();
   renderHighlights();
@@ -490,7 +537,7 @@ const TAB_RENDERERS = { items: () => { renderPlan(); renderItems(); }, changes: 
 
 function renderCounts() {
   const data = currentQuote();
-  $('cntItems').textContent = data.items.length;
+  $('cntItems').textContent = activeItems(data).length;
   $('cntChanges').textContent = data.items.filter(changeBadge).length;
   const phases = state.content.CONSTRUCTION_SCHEDULE_PHASES || [];
   $('cntSchedule').textContent = phases.length ? `${Math.max(...phases.map(p => p.startOffset + p.spanDays))}일` : '';
@@ -524,15 +571,17 @@ function renderAll() {
 function jumpToItem(itemId) {
   const it = currentQuote().items.find(x => x.id === itemId);
   if (!it) return;
-  // 필터 때문에 행이 숨어 있을 수 있으니 풀고 내역 탭으로 간다
+  const targetTab = isWorkMode() && !isActiveWorkItem(it) ? 'changes' : 'items';
+  const container = targetTab === 'changes' ? '#changedList' : '#itemList';
+  // 필터 때문에 행이 숨어 있을 수 있으니 풀고 해당 탭으로 간다
   state.room = null;
   state.trade = null;
   state.q = '';
   $('searchInput').value = '';
-  state.renderedTabs.delete('items');
-  showTab('items');
+  state.renderedTabs.delete(targetTab);
+  showTab(targetTab);
   // itemId는 데이터에 있는 품목 코드(예: 2-h-15)로 확인했으므로 선택자에 그대로 넣어도 안전하다
-  const row = document.querySelector(`#itemList [data-item="${it.id}"]`);
+  const row = document.querySelector(`${container} [data-item="${it.id}"]`);
   if (!row) return;
   row.setAttribute('aria-expanded', 'true');
   row.classList.remove('flash');
@@ -686,6 +735,20 @@ async function boot() {
   const highlightItem = readUrl();
   $('searchInput').value = state.q;
   bindEvents();
+  if (isWorkMode()) {
+    try {
+      const workBundle = await fetchJson(WORK_DATA_FILE);
+      state.content = workBundle.content;
+      state.quotes[FINAL_QUOTE.key] = workBundle.quote;
+    } catch (err) {
+      console.error('내역서 로드 실패:', err);
+      $('headMeta').textContent = `내역서를 불러오지 못했습니다 (${err.message}).`;
+      return;
+    }
+    renderAll();
+    if (highlightItem) jumpToItem(highlightItem);
+    return;
+  }
   await unlockIfEncrypted();
   try {
     const [content, final, ...quotes] = await Promise.all([

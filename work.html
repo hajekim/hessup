@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>84㎡ 아파트 인테리어 공사 — 시공·자재·일정 안내</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-mode="work">
+  <div class="page">
+    <header class="head">
+      <h1>84㎡ 아파트 인테리어 공사</h1>
+      <p id="headMeta">시공 내역서를 불러오는 중…</p>
+    </header>
+
+    <section class="summary" id="summary" aria-label="공사 현장 요약" aria-busy="true">
+      <div class="card">
+        <div class="card-label">공사 기간 · 일정 현황</div>
+        <div class="delta num" id="workSumPeriod">-</div>
+        <div class="sub" id="workSumToday"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">시공 내역 · 설계 변경</div>
+        <div class="delta num" id="workSumItems">-</div>
+        <div class="sub">주방 전면 신설(칸스톤·딥오크) · 확장부 중창·터닝도어 · 단독 4회로 증설</div>
+      </div>
+      <div class="card">
+        <div class="card-label">가전 개구부 · 마감재 · 시안</div>
+        <div class="delta num" id="workSumSpecs">-</div>
+        <div class="sub">싱크대 왼쪽 끝 식기세척기·상판 위 광파오븐 · 세탁실 워시콤보(침실2 내창 반입)</div>
+      </div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="보기 전환">
+      <button type="button" role="tab" id="tab-items" aria-controls="panel-items" data-tab="items">내역<span class="count" id="cntItems"></span></button>
+      <button type="button" role="tab" id="tab-changes" aria-controls="panel-changes" data-tab="changes">변경<span class="count" id="cntChanges"></span></button>
+      <button type="button" role="tab" id="tab-schedule" aria-controls="panel-schedule" data-tab="schedule">일정<span class="count long" id="cntSchedule"></span></button>
+      <button type="button" role="tab" id="tab-specs" aria-controls="panel-specs" data-tab="specs">자재<span class="count long" id="cntSpecs"></span></button>
+    </nav>
+
+    <!-- 1. 내역: 도면 + 시공 품목 -->
+    <section class="panel" id="panel-items" role="tabpanel" aria-labelledby="tab-items" tabindex="0">
+      <div class="explore">
+        <aside class="plan" id="plan">
+          <button type="button" class="plan-toggle" id="planToggle" aria-expanded="false">도면에서 구역 고르기 ▾</button>
+          <div class="plan-body">
+            <svg id="planSvg" viewBox="290 230 1080 1180" preserveAspectRatio="xMidYMid meet" role="img" aria-label="84제곱미터 세대 평면도. 구역을 누르면 그 공간의 품목만 보입니다">
+              <image href="./floorplan_unit.png" x="0" y="0" width="2200" height="1634" preserveAspectRatio="none" />
+              <g id="zones"></g>
+              <g id="zoneLabels"></g>
+            </svg>
+            <p class="plan-hint" id="planHint">구역을 누르면 그 공간의 품목만 보입니다. 한 번 더 누르면 해제됩니다.</p>
+          </div>
+        </aside>
+        <div class="explore-main">
+          <div class="filters">
+            <label class="search">
+              <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span class="sr-only">품목 검색</span>
+              <input id="searchInput" type="search" autocomplete="off" placeholder="품목·자재·구역 검색 (예: 칸스톤, 샷시, 화장실)" />
+            </label>
+            <div class="chips" id="tradeChips" role="group" aria-label="공종 선택"></div>
+          </div>
+          <div class="result-meta"><span id="resultCount"></span><span class="num" id="resultSum"></span></div>
+          <div id="itemList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 변경: 주요 설계·사양 변경 요약 · 변경 품목 -->
+    <section class="panel" id="panel-changes" role="tabpanel" aria-labelledby="tab-changes" tabindex="0">
+      <h2 class="section-title">주요 설계·사양 변경 요약 <small>현장 시공 및 마감 확정 기준</small></h2>
+      <div class="highlights" id="highlights"></div>
+      <h2 class="section-title">변경·추가·취소 품목 <small id="changedCount"></small></h2>
+      <div id="changedList"></div>
+    </section>
+
+    <!-- 3. 일정 -->
+    <section class="panel" id="panel-schedule" role="tabpanel" aria-labelledby="tab-schedule" tabindex="0">
+      <p class="panel-lead" id="scheduleLead"></p>
+      <p class="sched-today" id="scheduleToday"></p>
+      <div class="gantt" id="gantt"></div>
+    </section>
+
+    <!-- 4. 자재 -->
+    <section class="panel" id="panel-specs" role="tabpanel" aria-labelledby="tab-specs" tabindex="0">
+      <div id="applianceBox"></div>
+      <h2 class="section-title">마감재 스펙</h2>
+      <div class="specs" id="specs"></div>
+      <h2 class="section-title">3D 시안</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <footer class="foot">
+      본 페이지는 현장 시공·자재·일정 공유용 안내 페이지입니다. 세부 치수 및 개구부 기준은 가구·설비 현장 실측과 대조해 확인해 주세요.
+    </footer>
+  </div>
+
+  <dialog id="imageDialog" class="image-dialog" aria-labelledby="imageDialogTitle">
+    <form method="dialog"><button class="dialog-close" aria-label="닫기">닫기</button></form>
+    <img id="imageDialogImg" src="" alt="" />
+    <p id="imageDialogTitle"></p>
+  </dialog>
+
+  <script src="./app.js"></script>
+</body>
+</html>

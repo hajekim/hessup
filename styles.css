@@ -135,6 +135,9 @@ small { font-size: 12px; font-weight: 400; color: var(--text-3); }
 .hl { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
 .hl .v { font-size: 18px; font-weight: 700; margin: 2px 0 4px; }
 .hl p { font-size: 12.5px; color: var(--text-2); }
+[data-mode="work"] .summary .delta { font-size: 19px; display: block; margin-top: 4px; }
+[data-mode="work"] .summary .sub { display: block; }
+[data-mode="work"] .hl .card-label { font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
 .table-wrap { overflow-x: auto; margin-bottom: 24px; }
 .fold .table-wrap { margin-bottom: 0; }
 .compare { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); font-size: 13px; }
