@@ -19,6 +19,9 @@
   .app{display:grid;grid-template-columns:1fr 320px;height:100vh}
   header{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;padding:10px 18px;border-bottom:1px solid var(--line)}
   header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:-.2px}
+  header{align-items:center}
+  .back-btn{flex:none;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
+  .back-btn:hover,.back-btn:focus-visible{border-color:var(--oak);color:var(--oak)}
   header .sub{font-size:12px;color:var(--muted)}
   .app{grid-template-rows:auto 1fr}
   #stage{position:relative;overflow:hidden;cursor:grab;background:
@@ -59,8 +62,9 @@
 <body>
 <div class="app">
   <header>
+    <a id="backLink" class="back-btn" href="./work.html"><span aria-hidden="true">←</span> 돌아가기</a>
     <h1>84㎡ 아파트 · 조명·전열·가구 배치 평면도 (간이)</h1>
-    <span class="sub"><a id="backLink" href="./work.html">← 돌아가기</a> · 원본: 업체 조명평면도 · 전열평면도 (I-001, A3 1/60, 2026.11) · 벡터 좌표 추출 · 단위 mm · 조명도면 방향</span>
+    <span class="sub">원본: 업체 조명평면도 · 전열평면도 (I-001, A3 1/60, 2026.11) · 벡터 좌표 추출 · 단위 mm · 조명도면 방향</span>
   </header>
   <div id="stage">
     <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
