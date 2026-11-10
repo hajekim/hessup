@@ -165,9 +165,10 @@ function toMM(evt) {
 
 // ---------- 레이어 ----------
 const g = {};
-['grid', 'rooms', 'ref', 'walls', 'furniture', 'appliances', 'pipes', 'hangers', 'doors', 'cove', 'fixtures', 'elec', 'notes', 'measure', 'labels']
+['grid', 'rooms', 'ref', 'walls', 'furniture', 'appliances', 'pipes', 'hangers', 'doors', 'cove', 'fixtures', 'ldims', 'elec', 'notes', 'measure', 'labels']
   .forEach(id => g[id] = el('g', { id: 'L-' + id }, svg));
 g.grid.style.display = 'none';
+g.ldims.style.display = 'none';
 
 // 격자 100mm (1000mm마다 진하게)
 for (let x = -1000; x <= 12100; x += 100)
@@ -335,6 +336,21 @@ LAYOUT.acPipes.holes.forEach(h => {
   n.setAttribute('data-tip', `${h.label} · 높이 ${h.h}<br>${h.wall}<br>${h.note}`);
 });
 
+// 조명 위치 치수 (원본 조명도면 치수선, 원 설계 기준)
+const LDIMS = [{"v":400,"t":"400","o":"V","c":1588,"a":4801,"b":5199,"tx":1492,"ty":4998,"ext":[["H",5199,1524,1676]]},{"v":500,"t":"500","o":"H","c":6302,"a":1102,"b":1600,"tx":1347,"ty":6206,"ext":[["V",1600,6223,6375]]},{"v":500,"t":"500","o":"V","c":5847,"a":5301,"b":5799,"tx":5754,"ty":5552,"ext":[]},{"v":570,"t":"570","o":"H","c":5301,"a":4981,"b":5550,"tx":5264,"ty":5205,"ext":[["V",5550,5225,5377]]},{"v":300,"t":"300","o":"V","c":8067,"a":3000,"b":3299,"tx":7974,"ty":3151,"ext":[["H",3299,8039,8961],["H",3000,8039,8961]]},{"v":700,"t":"700","o":"V","c":9002,"a":5100,"b":5799,"tx":8906,"ty":5450,"ext":[["H",5100,8971,9040],["H",5799,8971,9040]]},{"v":600,"t":"600","o":"H","c":3246,"a":11100,"b":11702,"tx":11400,"ty":3150,"ext":[["V",11100,3061,3277],["V",11702,3061,3277]]},{"v":3000,"t":"3,000","o":"H","c":3762,"a":7800,"b":10800,"tx":9298,"ty":3648,"ext":[["V",7800,3731,4064],["V",10800,3731,4064],["V",10800,3731,4064]]},{"v":1400,"t":"1,400","o":"H","c":2629,"a":8321,"b":9721,"tx":9016,"ty":2513,"ext":[["V",9721,2598,2939],["V",8321,2598,2939]]},{"v":1000,"t":"1,000","o":"H","c":3541,"a":6200,"b":7201,"tx":6694,"ty":3425,"ext":[["V",6200,3061,3571],["V",7201,3061,3571]]},{"v":750,"t":"750","o":"V","c":7361,"a":3000,"b":3749,"tx":7265,"ty":3375,"ext":[["H",3749,7262,7391],["H",3000,7262,7391]]},{"v":475,"t":"475","o":"V","c":5527,"a":0,"b":475,"tx":5434,"ty":233,"ext":[["H",475,5375,5527]]},{"v":475,"t":"475","o":"V","c":5606,"a":1275,"b":1750,"tx":5513,"ty":1508,"ext":[["H",1275,5588,5636],["H",1750,5588,5636]]},{"v":750,"t":"750","o":"H","c":1059,"a":4501,"b":5250,"tx":4875,"ty":963,"ext":[["V",5250,1029,1138],["V",4501,1029,1138]]},{"v":750,"t":"750","o":"H","c":1049,"a":5451,"b":6200,"tx":5825,"ty":956,"ext":[["V",5451,1019,1138],["V",6200,1019,1138]]},{"v":570,"t":"570","o":"H","c":5144,"a":8532,"b":9101,"tx":8812,"ty":5050,"ext":[["V",8532,5116,5164],["V",9101,5116,5164]]},{"v":500,"t":"500","o":"H","c":7849,"a":11201,"b":11702,"tx":11449,"ty":7753,"ext":[]},{"v":500,"t":"500","o":"H","c":7826,"a":8202,"b":8702,"tx":8449,"ty":7730,"ext":[],"stale":true},{"v":650,"t":"650","o":"V","c":10315,"a":7950,"b":8600,"tx":10222,"ty":8275,"ext":[["H",7950,10188,10345],["H",8600,10188,10345]]},{"v":650,"t":"650","o":"V","c":11323,"a":5999,"b":6650,"tx":11230,"ty":6326,"ext":[]},{"v":450,"t":"450","o":"V","c":7369,"a":2350,"b":2799,"tx":7273,"ty":2572,"ext":[["H",2350,7236,7396],["H",2799,7236,7396]]},{"v":650,"t":"650","o":"V","c":7242,"a":0,"b":650,"tx":7146,"ty":327,"ext":[["H",650,7236,7272],["H",0,7236,7272]]},{"v":950,"t":"950","o":"V","c":2441,"a":0,"b":950,"tx":2348,"ty":477,"ext":[["H",950,2238,2471],["H",0,2238,2471]]},{"v":850,"t":"850","o":"V","c":2177,"a":3749,"b":4600,"tx":2081,"ty":4175,"ext":[["H",3749,2024,2177]]},{"v":900,"t":"900","o":"H","c":3762,"a":10800,"b":11702,"tx":11250,"ty":3666,"ext":[["V",10800,3731,4064],["V",10800,3731,4064],["V",11702,3731,4064]]},{"v":700,"t":"700","o":"H","c":1788,"a":3701,"b":4402,"tx":4052,"ty":1692,"ext":[["V",4402,1758,1791],["V",3701,1758,3614]]},{"v":700,"t":"700","o":"H","c":3571,"a":902,"b":1600,"tx":1250,"ty":3478,"ext":[["V",902,3543,4539],["V",1600,3543,3774]]},{"v":500,"t":"500","o":"H","c":505,"a":9002,"b":9502,"tx":9249,"ty":412,"ext":[["V",9002,478,513],["V",9502,478,513]]},{"v":500,"t":"500","o":"H","c":574,"a":6401,"b":6901,"tx":6648,"ty":478,"ext":[["V",6901,574,726]]},{"v":200,"t":"200","o":"V","c":1923,"a":6299,"b":6500,"tx":1827,"ty":6400,"ext":[["H",6500,1737,1951],["H",6299,1737,1951]]}];
+LDIMS.forEach(d => {
+  const grp = el('g', { opacity: d.stale ? .35 : 1 }, g.ldims);
+  d.ext.forEach(([o, c, a, b]) => el('line', o === 'V' ? { x1: c, y1: a, x2: c, y2: b } : { x1: a, y1: c, x2: b, y2: c },
+    grp).setAttribute('style', 'stroke:#8a847a;stroke-width:6'));
+  const L = d.o === 'V' ? { x1: d.c, y1: d.a, x2: d.c, y2: d.b } : { x1: d.a, y1: d.c, x2: d.b, y2: d.c };
+  el('line', { ...L, stroke: '#3a3733', 'stroke-width': 10 }, grp);
+  [[L.x1, L.y1], [L.x2, L.y2]].forEach(([x, y]) => el('line', { x1: x - 45, y1: y + 45, x2: x + 45, y2: y - 45, stroke: '#3a3733', 'stroke-width': 16 }, grp));
+  const t = el('text', { x: d.tx, y: d.ty, 'font-size': 140, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: '#23211d',
+    stroke: '#fbfaf7', 'stroke-width': 28, 'paint-order': 'stroke', transform: d.o === 'V' ? `rotate(-90 ${d.tx} ${d.ty})` : '' }, grp);
+  t.textContent = d.t;
+  grp.setAttribute('data-tip', `조명 위치 치수 ${d.t} mm (원 설계 기준)${d.stale ? '<br>이 등은 현장에서 옮기기로 해 치수가 맞지 않음' : ''}`);
+});
+
 // 행거 배치안
 const planG = {};
 LAYOUT.plans.forEach(P => {
@@ -392,10 +408,12 @@ function addToggle(list, id, label, n, target, color) {
   row.append(lab);
   if (n !== null) { const s = document.createElement('span'); s.className = 'n'; s.textContent = n; row.append(s); }
   list.append(row);
+  return cb;
 }
 const layerList = document.getElementById('layerList');
 TYPES.forEach(t => addToggle(layerList, t.id, t.name, (counts[t.id] || 0) + (t.unit || '개'), fx[t.id], swatch(t)));
 addToggle(layerList, 'COVE', '간접조명 라인 (천장 단차·커튼박스)', null, g.cove, swatch({ id: 'COVE' }));
+const ldimsCb = addToggle(layerList, 'LDIMS', '조명 위치 치수 (원 설계 기준, 흐린 것 = 현장 변경)', LDIMS.length + '개', g.ldims);
 
 // 전열 토글
 function eswatch(id) {
@@ -421,6 +439,8 @@ document.getElementById('elecNote').innerHTML = "침실1·2·3은 원본 표기 
 function setView(mode) {
   g.fixtures.style.display = g.cove.style.display = mode === 'elec' ? 'none' : '';
   g.elec.style.display = mode === 'light' ? 'none' : '';
+  ldimsCb.checked = mode === 'light';
+  g.ldims.style.display = ldimsCb.checked ? '' : 'none';
   ['vAll', 'vLight', 'vElec'].forEach(id => document.getElementById(id).classList.toggle('on', id === { all: 'vAll', light: 'vLight', elec: 'vElec' }[mode]));
 }
 document.getElementById('vAll').onclick = () => setView('all');
