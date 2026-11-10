@@ -60,7 +60,7 @@
 <div class="app">
   <header>
     <h1>84㎡ 아파트 · 조명·전열·가구 배치 평면도 (간이)</h1>
-    <span class="sub"><a href="./work.html">← 공사 안내</a> · 원본: 업체 조명평면도 · 전열평면도 (I-001, A3 1/60, 2026.11) · 벡터 좌표 추출 · 단위 mm · 조명도면 방향</span>
+    <span class="sub"><a id="backLink" href="./work.html">← 돌아가기</a> · 원본: 업체 조명평면도 · 전열평면도 (I-001, A3 1/60, 2026.11) · 벡터 좌표 추출 · 단위 mm · 조명도면 방향</span>
   </header>
   <div id="stage">
     <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -582,5 +582,6 @@ window.addEventListener('keydown', e => { if (e.key === 'Escape' && measuring) {
 window.addEventListener('resize', fit);
 fit();
 </script>
+<script>if (new URLSearchParams(location.search).get('from') === 'index') document.getElementById('backLink').href = './index.html';</script>
 </body>
 </html>
