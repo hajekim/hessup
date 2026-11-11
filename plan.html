@@ -68,7 +68,7 @@
   #stage.mode3d #view3d{display:block}
   #stage.mode3d .readout,#stage.mode3d .tip{display:none}
   #v3canvas{position:absolute;inset:0}
-  #v3bar{position:absolute;top:10px;left:120px;right:10px;display:flex;flex-wrap:wrap;gap:5px;z-index:2}
+  #v3bar{position:absolute;top:10px;left:205px;right:10px;display:flex;flex-wrap:wrap;gap:5px;z-index:2}
   #v3bar button{border-radius:999px;background:#ffffffe6;font-weight:600}
   #v3bar button.on{background:var(--ink);color:#fff}
   #v3bar .sep{width:1px;background:var(--line);margin:0 3px}
@@ -669,23 +669,24 @@ function ensure3D() {
    필요: THREE(r128) + THREE.OrbitControls. 좌표: 평면 x→X, 평면 y→Z, 높이→Y (mm × 0.001)
 */
 (function () {
-function buildScene(DATA, LAYOUT) {
+function buildScene(DATA, LAYOUT, ELEC) {
 const S = 0.001;
 // ---------- 재질 (업체 3D 시안 색 기준) ----------
 const M = {};
 const lin = c => new THREE.Color(c).convertSRGBToLinear(); // 시안 색(sRGB) → 선형
 const mat = (k, c, o = {}) => (M[k] = new THREE.MeshStandardMaterial({ color: lin(c), roughness: o.r ?? .8, metalness: o.m ?? 0, transparent: o.t != null, opacity: o.t ?? 1, emissive: lin(o.e || 0x000000), emissiveIntensity: o.ei ?? 1, side: o.side ?? THREE.FrontSide }));
-mat('wall', 0xf2efea); mat('ceil', 0xf7f5f1, { side: THREE.BackSide }); mat('floor', 0xe4ddd1, { r: .55 }); mat('bathFloor', 0xd9d4cb, { r: .4 });
+mat('wall', 0xf4f2ee); mat('ceil', 0xf7f5f1, { side: THREE.BackSide }); mat('floor', 0xe4ddd1, { r: .55 }); mat('bathFloor', 0xd9d4cb, { r: .4 });
 mat('oak', 0x5e4130, { r: .65 });       // 예림 딥오크 (문·하부장·키큰장)
 mat('dewy', 0xf4f1ea, { r: .5 });       // 상부장 듀이클라우드
 mat('stone', 0xdedad3, { r: .35 });     // 칸스톤 에덴그레이
 mat('walnut', 0x5a3a26, { r: .6 }); mat('oakNat', 0xb58a5c, { r: .6 }); mat('birch', 0xd9bf98, { r: .6 });
 mat('mustard', 0xc99a2e, { r: .9 }); mat('tgreen', 0x6e7b5a, { r: .9 }); mat('mgreen', 0x4f6a4b, { r: .9 }); mat('black', 0x232323, { r: .7 });
-mat('beige', 0xe3dccf, { r: .45 }); mat('clay', 0xcbb8a5, { r: .45 }); mat('screen', 0x101214, { r: .2, m: .3 });
+mat('beige', 0xd9cdb8, { r: .45 });   // LG 네이처 베이지 (벽보다 진하게) mat('clay', 0xcbb8a5, { r: .45 }); mat('screen', 0x101214, { r: .2, m: .3 });
 mat('white', 0xfafafa, { r: .5 }); mat('linen', 0xefe9df, { r: .95 }); mat('chrome', 0xb9bcbf, { r: .35, m: .25 });
 mat('glass', 0xbfd6dc, { r: .05, t: .28 }); mat('mirror', 0xcfdade, { r: .08, m: .2 });
 mat('light', 0xffffff, { e: 0xfff4dc, ei: 1.2 }); mat('lamp', 0xd9652b, { r: .5, e: 0x7a2e10, ei: .6 }); mat('steel', 0x8f9396, { r: .4, m: .6 });
 mat('frame', 0x3a3733, { r: .6 });
+mat('hanger', 0xd8d1c4, { r: .5 });   // 에넥스 화이트 (벽과 구별되게 약간 회색)
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xefece6);
@@ -860,15 +861,15 @@ plan.modules.forEach(m => {
     box(x0 + 500, y1 - 60, x1 - 500, y1 - 40, 760, 1150, 'screen'); box(x0 + 760, y1 - 160, x1 - 760, y1 - 60, 740, 760, 'black');
     return;
   }
-  if (m.kind === 'corner') { prism(m.poly, 0, 2180, 'white'); return; }
+  if (m.kind === 'corner') { prism(m.poly, 0, 2180, 'hanger'); return; }
   const H = 2180, P = 25;
   [[x0, y0], [x1 - P, y0], [x0, y1 - P], [x1 - P, y1 - P]].forEach(([x, y]) => box(x, y, x + P, y + P, 0, H, 'chrome'));
-  box(x0, y0, x1, y1, 1880, 1900, 'white'); box(x0, y0, x1, y1, 0, 60, 'white');
+  box(x0, y0, x1, y1, 1880, 1900, 'hanger'); box(x0, y0, x1, y1, 0, 60, 'hanger');
   const along = m.face === '+y' || m.face === '-y';
   const rail = (z) => along ? box(x0 + P, (y0 + y1) / 2 - 10, x1 - P, (y0 + y1) / 2 + 10, z - 10, z + 10, 'chrome') : box((x0 + x1) / 2 - 10, y0 + P, (x0 + x1) / 2 + 10, y1 - P, z - 10, z + 10, 'chrome');
-  if (m.kind === 'short') { rail(1800); rail(900); box(x0, y0, x1, y1, 980, 1000, 'white'); }
+  if (m.kind === 'short') { rail(1800); rail(900); box(x0, y0, x1, y1, 980, 1000, 'hanger'); }
   else { rail(1800); if (m.drawer) { const d = m.drawer, dx = d.map(p => p[0]), dy = d.map(p => p[1]);
-    box(x0 + 10, Math.min(y0, ...dy), x1 - 10, Math.max(y1, ...dy), 0, 870, 'white'); } }
+    box(x0 + 10, Math.min(y0, ...dy), x1 - 10, Math.max(y1, ...dy), 0, 870, 'hanger'); } }
 });
 }); cur = root;
 
@@ -887,13 +888,68 @@ Object.assign(sun.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near:
 
 
 lightG.traverse(o => o.castShadow = false);
-return { scene, ceilG, lightG, furnG, appG, hangerG, dayLights, nightLights, M, sun };
+
+// ---------- 가구·가전·행거 외곽선 (흰 벽·흰 가전 구별용) ----------
+const edgeMat = new THREE.LineBasicMaterial({ color: 0x2b2622, transparent: true, opacity: .75 });
+function outline(group) {
+  const meshes = []; group.traverse(o => { if (o.isMesh) meshes.push(o); });
+  meshes.forEach(m => m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry, 25), edgeMat)));
+}
+[furnG, appG, ...Object.values(hangerG)].forEach(outline);
+
+// ---------- 전열 (콘센트·스위치·랜) : 가장 가까운 벽면에 판을 붙임 ----------
+const elecG = new THREE.Group(); root.add(elecG);
+if (ELEC) {
+  const EC = { STD: 0x3d4349, DED: 0xc92a2a, WP: 0x1864ab, SW: 0x2b8a3e, LAN: 0x862e9c };
+  const em = {}; Object.entries(EC).forEach(([k, c]) => em[k] = new THREE.MeshStandardMaterial({ color: lin(c), roughness: .5 }));
+  const faceMat = new THREE.MeshStandardMaterial({ color: lin(0xffffff), roughness: .4 });
+  const holeMat = new THREE.MeshStandardMaterial({ color: lin(0x222222), roughness: .6 });
+  // 점에서 가장 가까운 벽 사각형과 그 면(방 쪽) 방향
+  function wallFace(x, y) {
+    let best = null;
+    DATA.walls.forEach(([wx, wy, ww, wh]) => {
+      const dx = Math.max(wx - x, 0, x - (wx + ww)), dy = Math.max(wy - y, 0, y - (wy + wh)), d = Math.hypot(dx, dy);
+      // 사각형 안쪽이면 가장 가까운 변까지 거리(음수 취급)
+      let face;
+      const cand = [[x - wx, 'W'], [wx + ww - x, 'E'], [y - wy, 'N'], [wy + wh - y, 'S']];
+      if (d === 0) { const c = cand.sort((a, b) => a[0] - b[0])[0]; face = c[1]; }
+      else face = Math.abs(dx) >= Math.abs(dy) ? (x < wx ? 'W' : 'E') : (y < wy ? 'N' : 'S');
+      const score = d === 0 ? -1 : d;
+      if (!best || score < best.score) best = { score, d, face, wx, wy, ww, wh };
+    });
+    return best;
+  }
+  function plate(x, y, z, kind, big) {
+    const f = wallFace(x, y); if (!f || f.d > 400) return;
+    const T = 12, Wd = big ? 120 : 90, H = big ? 120 : 140;   // 판 폭·높이(실물보다 조금 크게)
+    let px = x, py = y, alongX = true, nx = 0, ny = 0;
+    if (f.face === 'W') { px = f.wx - T / 2; alongX = false; nx = -1; }
+    if (f.face === 'E') { px = f.wx + f.ww + T / 2; alongX = false; nx = 1; }
+    if (f.face === 'N') { py = f.wy - T / 2; ny = -1; }
+    if (f.face === 'S') { py = f.wy + f.wh + T / 2; ny = 1; }
+    const g = new THREE.Group(); g.position.set(px * S, z * S, py * S); elecG.add(g);
+    const mk = (w, h, d, m, ox = 0) => { const b = new THREE.Mesh(new THREE.BoxGeometry(alongX ? w * S : d * S, h * S, alongX ? d * S : w * S), m);
+      b.position.set(nx * ox * S, 0, ny * ox * S); g.add(b); return b; };
+    mk(Wd + 30, H + 30, T, em[kind]);              // 색 테두리
+    mk(Wd, H, T, faceMat, 3);                       // 흰 판
+    if (kind === 'SW') mk(Wd * .7, H * .45, T, em.SW, 5);
+    else if (kind === 'LAN') mk(30, 30, T, holeMat, 5);
+    else [-1, 1].forEach(k => { const h = mk(20, 20, T, holeMat, 5); h.position.y = k * 30 * S; });
+  }
+  const H = v => { const n = parseInt(String(v ?? '').replace(/[^0-9]/g, ''), 10); return isNaN(n) ? null : n; };
+  (ELEC.outlets || []).forEach(o => plate(o.x, o.y, (o.h || 300), o.kind === 'STD' ? 'STD' : o.kind === 'WP' ? 'WP' : 'DED'));
+  (ELEC.switches || []).forEach(o => plate(o.x, o.y, 1200, 'SW'));
+  (ELEC.lan || []).forEach(o => plate(o.x, o.y, 600, 'LAN', true));
+  (ELEC.site || []).forEach(o => plate(o.x, o.y + (o.dy || 0), H(o.h) || (o.kind === 'SW' ? 1200 : 300), o.kind, o.kind === 'LAN'));
+  elecG.traverse(o => { if (o.isMesh) o.castShadow = false; });
+}
+return { scene, ceilG, lightG, furnG, appG, hangerG, elecG, dayLights, nightLights, M, sun };
 }
 
 window.Plan3D = {
-  create(container, DATA, LAYOUT, VIEWS) {
+  create(container, DATA, LAYOUT, VIEWS, ELEC) {
     const S = 0.001;
-    const W = buildScene(DATA, LAYOUT);
+    const W = buildScene(DATA, LAYOUT, ELEC);
     const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = .95;
@@ -941,7 +997,7 @@ window.Plan3D = {
       resize, setNight, isNight: () => night,
       view(i, animate = true) { applyView(VIEWS[i], animate); },
       pause(p) { running = !p; },
-      setVisible(key, on) { const g = { furniture: W.furnG, appliances: W.appG, lights: W.lightG }[key]; if (g) g.visible = on; },
+      setVisible(key, on) { const g = { furniture: W.furnG, appliances: W.appG, lights: W.lightG, elec: W.elecG }[key]; if (g) g.visible = on; },
       setPlan(id) { Object.entries(W.hangerG).forEach(([k, g]) => g.visible = k === id); },
       // 미니맵용: 카메라 평면 위치(mm)와 바라보는 방향(rad)
       cam() { const d = new THREE.Vector3(); camera.getWorldDirection(d); return { x: camera.position.x / S, y: camera.position.z / S, h: camera.position.y / S, dir: Math.atan2(d.z, d.x), aerial }; },
@@ -962,7 +1018,7 @@ window.Plan3D = {
 };
 })();
 
-    P3 = Plan3D.create(document.getElementById('v3canvas'), DATA, LAYOUT, VIEWS3D);
+    P3 = Plan3D.create(document.getElementById('v3canvas'), DATA, LAYOUT, VIEWS3D, { outlets: ELEC.outlets, switches: ELEC.switches, lan: ELEC.lan, site: SITE_ELEC });
     document.getElementById('v3load').remove();
     P3.setPlan(curPlan); sync3D(); buildBar(); initMinimap();
     addEventListener('resize', () => P3.resize());
@@ -976,6 +1032,7 @@ function sync3D() {
   P3.setVisible('furniture', g.furniture.style.display !== 'none');
   P3.setVisible('appliances', g.appliances.style.display !== 'none');
   P3.setVisible('lights', g.fixtures.style.display !== 'none');
+  P3.setVisible('elec', g.elec.style.display !== 'none');
 }
 document.querySelector('aside').addEventListener('change', sync3D);
 document.querySelector('aside').addEventListener('click', () => setTimeout(sync3D));
