@@ -1,0 +1,277 @@
+/* ==========================================================================
+   HESSUP STUDIO — Tier 1, Tier 2 & Tier 3 Design Tokens
+   Tactile Architectural Atelier · Porcelain Light & Site Dark
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Tier 1 — Primitive Tokens (Material Palette) */
+  --color-porcelain-50:  #FAF8F5;
+  --color-porcelain-100: #F4F1EA;
+  --color-porcelain-200: #EAE5DC;
+  --color-porcelain-300: #DEDAD3;
+  --color-porcelain-400: #B9B2A6;
+
+  --color-oak-500:       #A89272;
+  --color-oak-600:       #8A5A2B;
+  --color-oak-700:       #5E4130;
+  --color-oak-900:       #3B281E;
+
+  --color-slate-950:     #141311;
+  --color-slate-900:     #1E1C1A;
+  --color-slate-800:     #2B2825;
+  --color-slate-700:     #3D3833;
+  --color-slate-600:     #5C564C;
+  --color-slate-500:     #766F65;
+
+  --color-terracotta-500:#C4562B;
+  --color-terracotta-600:#A33E18;
+  --color-terracotta-100:#FCEEE8;
+
+  --color-emerald-600:   #1F6E43;
+  --color-emerald-100:   #E6F4EC;
+  --color-amber-600:     #9A5B13;
+  --color-amber-100:     #FEF3E2;
+  --color-crimson-600:   #B42318;
+  --color-crimson-100:   #FEE4E2;
+  --color-cobalt-600:    #185A9D;
+  --color-cobalt-100:    #E5F0FA;
+
+  /* Tier 2 — Semantic Tokens (Porcelain Light Default) */
+  --surface-canvas:      var(--color-porcelain-100);
+  --surface-elevated:    var(--color-porcelain-50);
+  --surface-sunken:      var(--color-porcelain-200);
+  --surface-glass:       rgba(250, 248, 245, 0.90);
+  --surface-inverse:     var(--color-slate-900);
+
+  --text-primary:        var(--color-slate-900);
+  --text-secondary:      var(--color-slate-700);
+  --text-muted:          var(--color-slate-600);
+  --text-on-accent:      #FFFFFF;
+
+  --border-subtle:       var(--color-porcelain-300);
+  --border-strong:       var(--color-porcelain-400);
+  --border-focus:        var(--color-terracotta-500);
+
+  --accent-primary:      var(--color-oak-700);
+  --accent-interactive:  var(--color-terracotta-600);
+  --accent-soft:         var(--color-terracotta-100);
+
+  /* Semantic Surface & Selection Aliases */
+  --bg-canvas:           var(--surface-canvas);
+  --bg-surface:          var(--surface-elevated);
+  --bg-selected:         var(--accent-soft);
+
+  /* Architectural Material Palette Tokens (Oak, Brass, Sage, Nickel) */
+  --mat-oak-fg:          #5E4130;
+  --mat-oak-bg:          #F4EBE1;
+  --mat-brass-fg:        #7A4B0F;
+  --mat-brass-bg:        #FDF3DC;
+  --mat-sage-fg:         #1F5C3F;
+  --mat-sage-bg:         #E6F2EB;
+  --mat-nickel-fg:       #2B4C65;
+  --mat-nickel-bg:       #E8EFF5;
+
+  /* Semantic Status & Change Badges (Aligned with Material Palette >= 4.5:1 AA) */
+  --status-add-bg:       var(--mat-oak-bg);
+  --status-add-fg:       var(--mat-oak-fg);
+  --status-mod-bg:       var(--mat-brass-bg);
+  --status-mod-fg:       var(--mat-brass-fg);
+  --status-cut-bg:       var(--mat-sage-bg);
+  --status-cut-fg:       var(--mat-sage-fg);
+  --status-sup-bg:       var(--mat-nickel-bg);
+  --status-sup-fg:       var(--mat-nickel-fg);
+
+  --status-added-bg:     var(--status-add-bg);
+  --status-added-fg:     var(--status-add-fg);
+  --status-modified-bg:  var(--status-mod-bg);
+  --status-modified-fg:  var(--status-mod-fg);
+  --status-cancelled-bg: var(--status-cut-bg);
+  --status-cancelled-fg: var(--status-cut-fg);
+  --status-supplied-bg:  var(--status-sup-bg);
+  --status-supplied-fg:  var(--status-sup-fg);
+
+  /* Tier 3 — Component & CAD Layer Tokens */
+  --cad-wall-fill:       #23211D;
+  --cad-room-base:       #F4F1EA;
+  --cad-room-selected:   #F3DFC6;
+  --cad-room-hover:      #EFE6D6;
+  --cad-grid-minor:      #EEE9DF;
+  --cad-grid-major:      #DDD5C7;
+  --cad-light-dl51:      #D97706;
+  --cad-light-t3:        #0D9488;
+  --cad-light-cob:       #B45309;
+  --cad-elec-std:        #3D4349;
+  --cad-elec-ded:        #C92A2A;
+  --cad-elec-wp:         #1864AB;
+  --cad-elec-sw:         #2B8A3E;
+  --cad-elec-lan:        #862E9C;
+  --cad-elec-panel:      #5F3DC4;
+  --cad-hanger-a:        #1C7ED6;
+  --cad-hanger-b:        #0CA678;
+  --cad-ac-pipe:         #0B7285;
+
+  /* plan.html SVG legacy variable aliases */
+  --wall:                var(--cad-wall-fill);
+  --oak:                 var(--color-oak-600);
+  --accent:              var(--accent-interactive);
+  --c-DL51:              #D97706;
+  --c-T3:                #0D9488;
+  --c-COB:               #B45309;
+  --c-WP75:              #2563EB;
+  --c-RAIL:              #7C3AED;
+  --c-SPOT:              #9333EA;
+  --c-D200:              #059669;
+  --c-SENSOR:            #DC2626;
+  --c-PEND:              #EA580C;
+  --c-D600:              #4F46E5;
+  --c-COVE:              #14B8A6;
+  --e-STD:               var(--cad-elec-std);
+  --e-DED:               var(--cad-elec-ded);
+  --e-WP:                var(--cad-elec-wp);
+  --e-SW:                var(--cad-elec-sw);
+  --e-LAN:               var(--cad-elec-lan);
+  --e-PANEL:             var(--cad-elec-panel);
+
+  /* Typography & Scale */
+  --font-sans:           "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-display:        "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:           "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --text-xs:   12px;
+  --text-sm:   13px;
+  --text-base: 14px;
+  --text-lg:   15px;
+  --text-xl:   21px;
+  --text-2xl:  25px;
+
+  /* Spacing & Radii */
+  --space-1:   4px;
+  --space-2:   6px;
+  --space-3:   10px;
+  --space-4:   14px;
+  --space-5:   16px;
+  --space-6:   20px;
+  --space-8:   24px;
+  --space-10:  28px;
+  --space-12:  36px;
+
+  --radius-sm:   5px;
+  --radius-md:   8px;
+  --radius-lg:   10px;
+  --radius-pill: 9999px;
+
+  --shadow-card:  none;
+  --shadow-float: 0 6px 18px rgba(20, 19, 17, 0.10), 0 1px 4px rgba(20, 19, 17, 0.05);
+
+  /* Motion Choreography Tokens */
+  --ease-out-quart:       cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:        cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-sine:     cubic-bezier(0.37, 0, 0.63, 1);
+
+  --dur-instant:          80ms;
+  --dur-fast:             150ms;
+  --dur-normal:           240ms;
+  --dur-spatial:          360ms;
+  --dur-camera-3d:        650ms;
+  --dur-highlight-pulse:  1600ms;
+
+  --highlight-ring-color: rgba(196, 86, 43, 0.45);
+  --highlight-bg-wash:    rgba(252, 238, 232, 0.85);
+}
+
+/* Tier 2 — Site Dark Mode Override */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-canvas:      var(--color-slate-950);
+  --surface-elevated:    var(--color-slate-900);
+  --surface-sunken:      var(--color-slate-800);
+  --surface-glass:       rgba(30, 28, 26, 0.90);
+  --surface-inverse:     var(--color-porcelain-50);
+
+  --text-primary:        #F4F1EA;
+  --text-secondary:      #D0C9BE;
+  --text-muted:          #9E9689;
+  --text-on-accent:      #141311;
+
+  --border-subtle:       #2E2B27;
+  --border-strong:       #46413B;
+  --border-focus:        #E07A52;
+
+  --accent-primary:      #D4A373;
+  --accent-interactive:  #E07A52;
+  --accent-soft:         rgba(196, 86, 43, 0.22);
+
+  --bg-canvas:           var(--surface-canvas);
+  --bg-surface:          var(--surface-elevated);
+  --bg-selected:         var(--accent-soft);
+
+  --mat-oak-fg:          #F3D5B5;
+  --mat-oak-bg:          rgba(168, 146, 114, 0.24);
+  --mat-brass-fg:        #FCD34D;
+  --mat-brass-bg:        rgba(180, 120, 30, 0.24);
+  --mat-sage-fg:         #86EFAC;
+  --mat-sage-bg:         rgba(31, 110, 67, 0.24);
+  --mat-nickel-fg:       #BAE6FD;
+  --mat-nickel-bg:       rgba(56, 110, 150, 0.26);
+
+  --status-add-bg:       var(--mat-oak-bg);
+  --status-add-fg:       var(--mat-oak-fg);
+  --status-mod-bg:       var(--mat-brass-bg);
+  --status-mod-fg:       var(--mat-brass-fg);
+  --status-cut-bg:       var(--mat-sage-bg);
+  --status-cut-fg:       var(--mat-sage-fg);
+  --status-sup-bg:       var(--mat-nickel-bg);
+  --status-sup-fg:       var(--mat-nickel-fg);
+
+  --status-added-bg:     var(--status-add-bg);
+  --status-added-fg:     var(--status-add-fg);
+  --status-modified-bg:  var(--status-mod-bg);
+  --status-modified-fg:  var(--status-mod-fg);
+  --status-cancelled-bg: var(--status-cut-bg);
+  --status-cancelled-fg: var(--status-cut-fg);
+  --status-supplied-bg:  var(--status-sup-bg);
+  --status-supplied-fg:  var(--status-sup-fg);
+
+  --cad-wall-fill:       #E5E0D8;
+  --cad-room-base:       #1E1C1A;
+  --cad-room-selected:   #3B281E;
+  --cad-room-hover:      #2C2520;
+  --cad-grid-minor:      #252320;
+  --cad-grid-major:      #33302B;
+
+  --highlight-bg-wash:   rgba(196, 86, 43, 0.26);
+  --shadow-card:         0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-float:        0 10px 30px rgba(0, 0, 0, 0.55);
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant:    0ms;
+    --dur-fast:       0ms;
+    --dur-normal:     0ms;
+    --dur-spatial:    0ms;
+    --dur-camera-3d:  0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High Contrast Override */
+@media (prefers-contrast: more) {
+  :root {
+    --border-subtle: #5C564C;
+    --border-strong: #1E1C1A;
+  }
+  [data-theme="dark"] {
+    --border-subtle: #9E9689;
+    --border-strong: #F4F1EA;
+  }
+}

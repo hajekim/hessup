@@ -1,112 +1,352 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<html lang="ko" data-mode="work" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="robots" content="noindex, nofollow, noarchive" />
-  <title>84㎡ 아파트 인테리어 공사 — 시공·자재·일정 안내</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="./styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="color-scheme" content="light dark">
+  <title>HESSUP STUDIO · 84㎡ 시공 · 자재 · 도면 · 일정 안내</title>
+  <link rel="stylesheet" href="./css/tokens.css?v=8">
+  <link rel="stylesheet" href="./css/layout.css?v=8">
+  <link rel="stylesheet" href="./css/components.css?v=8">
 </head>
 <body data-mode="work">
-  <div class="page">
-    <header class="head">
-      <h1>84㎡ 아파트 인테리어 공사</h1>
-      <p id="headMeta">시공 내역서를 불러오는 중…</p>
-    </header>
+  <!-- Skip Link -->
+  <a class="skip-link" href="#main-workspace">본문 워크스페이스로 건너뛰기</a>
 
-    <section class="summary" id="summary" aria-label="공사 현장 요약" aria-busy="true">
-      <div class="card">
-        <div class="card-label">공사 기간 · 일정 현황</div>
-        <div class="delta num" id="workSumPeriod">-</div>
-        <div class="sub" id="workSumToday"></div>
-      </div>
-      <div class="card">
-        <div class="card-label">시공 내역 · 설계 변경</div>
-        <div class="delta num" id="workSumItems">-</div>
-        <div class="sub">주방 전면 신설(칸스톤·딥오크) · 확장부 중창·터닝도어 · 단독 4회로 · 랜선(거실 TV장·침실1·침실3)</div>
-      </div>
-      <div class="card">
-        <div class="card-label">가전 개구부 · 마감재 · 시안</div>
-        <div class="delta num" id="workSumSpecs">-</div>
-        <div class="sub">싱크대 왼쪽 끝 식기세척기·상판 위 광파오븐 · 세탁실 워시콤보(침실2 내창 반입)</div>
-      </div>
-    </section>
+  <!-- Polite ARIA Live Announcer -->
+  <div id="studio-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-    <nav class="tabs" role="tablist" aria-label="보기 전환">
-      <button type="button" role="tab" id="tab-items" aria-controls="panel-items" data-tab="items">내역<span class="count" id="cntItems"></span></button>
-      <button type="button" role="tab" id="tab-changes" aria-controls="panel-changes" data-tab="changes">변경<span class="count" id="cntChanges"></span></button>
-      <button type="button" role="tab" id="tab-schedule" aria-controls="panel-schedule" data-tab="schedule">일정<span class="count long" id="cntSchedule"></span></button>
-      <button type="button" role="tab" id="tab-specs" aria-controls="panel-specs" data-tab="specs">자재<span class="count long" id="cntSpecs"></span></button>
-      <a class="tab-link" href="./plan.html?from=work" title="조명·전열·가구 배치 평면도와 3D 모형 (새 화면)">평면도·3D<span aria-hidden="true"> ↗</span></a>
-    </nav>
+  <!-- Studio Header (Work Mode: Zero Mode Switcher, Zero Price/Contract UI) -->
+  <header class="studio-header" role="banner">
+    <div class="studio-header-inner">
+      <div class="brand-cluster">
+        <div class="brand-title-row">
+          <span class="brand-mark">HESSUP STUDIO</span>
+          <h1 class="brand-title">84㎡ 아파트 인테리어 · 시공 · 자재 · 도면 안내</h1>
+        </div>
+        <p class="brand-subtitle" id="header-subtitle">시공·자재·도면·일정 안내 (2026. 11. 17 현장 업데이트)</p>
+      </div>
 
-    <!-- 1. 내역: 도면 + 시공 품목 -->
-    <section class="panel" id="panel-items" role="tabpanel" aria-labelledby="tab-items" tabindex="0">
-      <div class="explore">
-        <aside class="plan" id="plan">
-          <button type="button" class="plan-toggle" id="planToggle" aria-expanded="false">도면에서 구역 고르기 ▾</button>
-          <div class="plan-body">
-            <svg id="planSvg" viewBox="290 230 1080 1180" preserveAspectRatio="xMidYMid meet" role="img" aria-label="84제곱미터 세대 평면도. 구역을 누르면 그 공간의 품목만 보입니다">
-              <image href="./floorplan_unit.png" x="0" y="0" width="2200" height="1634" preserveAspectRatio="none" />
-              <g id="zones"></g>
-              <g id="zoneLabels"></g>
-            </svg>
-            <p class="plan-hint" id="planHint">구역을 누르면 그 공간의 품목만 보입니다. 한 번 더 누르면 해제됩니다.</p>
-          </div>
-        </aside>
-        <div class="explore-main">
-          <div class="filters">
-            <label class="search">
-              <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              <span class="sr-only">품목 검색</span>
-              <input id="searchInput" type="search" autocomplete="off" placeholder="품목·자재·구역 검색 (예: 칸스톤, 샷시, 화장실)" />
-            </label>
-            <div class="chips" id="tradeChips" role="group" aria-label="공종 선택"></div>
-          </div>
-          <div class="result-meta"><span id="resultCount"></span><span class="num" id="resultSum"></span></div>
-          <div id="itemList"></div>
+      <div class="header-controls">
+        <!-- Standalone Floorplan Link (plan.html?from=work) -->
+        <a class="theme-toggle-btn" href="./plan.html?from=work" title="전체화면 조명·전열·가구 배치 평면도와 3D 모형 페이지 열기" style="text-decoration:none;">
+          <span>📐 전체화면 평면도·3D ↗</span>
+        </a>
+
+        <!-- Theme Toggle -->
+        <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-pressed="false" aria-label="조명 테마 전환">
+          <span id="theme-toggle-label">☀ 주간 포세린</span>
+        </button>
+
+        <!-- Global Search -->
+        <div class="search-box" role="search">
+          <label for="q" class="sr-only">품목, 자재, 공종, 공간 통합 검색</label>
+          <input type="search" id="q" class="search-input" placeholder="품목·자재·공간 검색 (예: 칸스톤, 샷시, 51Ø, 워시콤보) [ / ]" autocomplete="off">
+          <kbd class="search-shortcut-kbd" id="q-kbd">/</kbd>
+          <button type="button" class="search-clear-btn" id="q-clear" hidden aria-label="검색어 지우기">지우기 ×</button>
         </div>
       </div>
-    </section>
+    </div>
+  </header>
 
-    <!-- 2. 변경: 주요 설계·사양 변경 요약 · 변경 품목 -->
-    <section class="panel" id="panel-changes" role="tabpanel" aria-labelledby="tab-changes" tabindex="0">
-      <h2 class="section-title">주요 설계·사양 변경 요약 <small>현장 시공 및 마감 확정 기준</small></h2>
-      <div class="highlights" id="highlights"></div>
-      <h2 class="section-title">변경·추가·취소 품목 <small id="changedCount"></small></h2>
-      <div id="changedList"></div>
-    </section>
+  <div class="studio-shell">
+    <!-- KPI Dossier Strip -->
+    <section class="kpi-strip" id="kpi-strip" aria-label="현장 핵심 지표 요약"></section>
 
-    <!-- 3. 일정 -->
-    <section class="panel" id="panel-schedule" role="tabpanel" aria-labelledby="tab-schedule" tabindex="0">
-      <p class="panel-lead" id="scheduleLead"></p>
-      <p class="sched-today" id="scheduleToday"></p>
-      <div class="gantt" id="gantt"></div>
-    </section>
+    <!-- Sticky Room Filter Bar -->
+    <nav class="room-filter-bar" id="roomFilter" aria-label="공간별 필터">
+      <span class="room-filter-label" id="room-filter-heading">공간 필터</span>
+      <div class="room-chip-list" id="room-chip-list" role="group" aria-labelledby="room-filter-heading"></div>
+      <button type="button" class="room-reset-btn" id="room-reset-btn" hidden>전체 공간 보기 ↺</button>
+    </nav>
 
-    <!-- 4. 자재 -->
-    <section class="panel" id="panel-specs" role="tabpanel" aria-labelledby="tab-specs" tabindex="0">
-      <div id="applianceBox"></div>
-      <h2 class="section-title">마감재 스펙</h2>
-      <div class="specs" id="specs"></div>
-      <h2 class="section-title">3D 시안</h2>
-      <div class="gallery" id="gallery"></div>
-    </section>
+    <!-- Asymmetric 2-Column Split Studio Workspace -->
+    <main class="studio-workspace" id="main-workspace">
+      <!-- Left Column: Sticky Spatial Stage -->
+      <aside class="spatial-stage-column" id="spatial-stage" aria-label="공간 도면 및 3D 스테이지">
+        <div class="stage-header">
+          <div class="stage-title-group">
+            <h2 class="stage-title">공간 스테이지</h2>
+            <span class="status-badge is-supplied" id="stage-active-room-badge">전체 세대</span>
+            <button type="button" class="stage-expand-btn" id="stage-expand-btn" aria-pressed="false" title="2D 정밀 CAD와 3D 모형을 화면 가득 크게 봅니다">⤢ 크게 보기</button>
+          </div>
+          <!-- Submodes -->
+          <div class="stage-submode-tabs" role="tablist" aria-label="스테이지 뷰 모드">
+            <button type="button" role="tab" class="stage-submode-btn is-active" id="submode-tab-zone" data-submode="zone" aria-selected="true" tabindex="0" aria-controls="stage-panel-zone">구역 도면</button>
+            <button type="button" role="tab" class="stage-submode-btn" id="submode-tab-cad" data-submode="cad" aria-selected="false" tabindex="-1" aria-controls="stage-panel-cad">2D 조명·전열·가구 평면도 ★</button>
+            <button type="button" role="tab" class="stage-submode-btn" id="submode-tab-3d" data-submode="3d" aria-selected="false" tabindex="-1" aria-controls="stage-panel-3d">3D 둘러보기 ★</button>
+          </div>
+        </div>
 
-    <footer class="foot">
-      본 페이지는 현장 시공·자재·일정 공유용 안내 페이지입니다. 세부 치수 및 개구부 기준은 가구·설비 현장 실측과 대조해 확인해 주세요.
-    </footer>
+        <div class="spatial-stage-body">
+          <!-- Submode 1: Zone Map -->
+          <div class="stage-viewport" id="stage-panel-zone" role="tabpanel" aria-labelledby="submode-tab-zone">
+            <div class="zone-map-wrap">
+              <svg id="zone-map-svg" class="zone-map-svg" viewBox="290 230 1080 1180" preserveAspectRatio="xMidYMid meet" role="group" aria-label="84㎡ 구역 선택 평면도"></svg>
+            </div>
+          </div>
+
+          <!-- Submode 2: 1/60 Interactive CAD -->
+          <div class="stage-viewport" id="stage-panel-cad" role="tabpanel" aria-labelledby="submode-tab-cad" hidden>
+            <div class="cad-toolbar">
+              <div class="cad-btn-group" role="group" aria-label="CAD 레이어 표시">
+                <button type="button" class="cad-tool-btn is-active" data-cad-layer="shopPins" aria-pressed="true">📐 11/17 가구도면 핀 (5)</button>
+                <button type="button" class="cad-tool-btn is-active" data-cad-layer="fixtures" aria-pressed="true">조명 기구</button>
+                <button type="button" class="cad-tool-btn is-active" data-cad-layer="elec" aria-pressed="true">콘센트 · 스위치</button>
+                <button type="button" class="cad-tool-btn" data-cad-layer="ldims" aria-pressed="false">설계 치수선</button>
+                <button type="button" class="cad-tool-btn is-active" data-cad-layer="furniture" aria-pressed="true">이동 가구</button>
+                <button type="button" class="cad-tool-btn is-active" data-cad-layer="appliances" aria-pressed="true">가전 · 배관</button>
+                <button type="button" class="cad-tool-btn" id="cad-grid-btn" aria-pressed="false">100mm 격자</button>
+              </div>
+              <div class="cad-btn-group" role="group" aria-label="행거 배치안 및 측정 도구">
+                <button type="button" class="cad-tool-btn" data-hanger-plan="A" aria-pressed="false">행거 A안 (4모듈)</button>
+                <button type="button" class="cad-tool-btn is-active" data-hanger-plan="B" aria-pressed="true">행거 B안 (3모듈 ★추천)</button>
+                <button type="button" class="cad-tool-btn" id="cad-measure-btn" aria-pressed="false">치수 재기 (Shift=직각)</button>
+                <button type="button" class="cad-tool-btn" id="cad-fit-btn">화면 맞춤</button>
+              </div>
+            </div>
+            <!-- Quick Pin-to-Drawing Bar (11/17 5 Shop Drawings) -->
+            <div class="shop-pin-bar" id="cad-shop-pin-bar" role="group" aria-label="11/17 가구 제작도면 바로가기">
+              <span class="shop-pin-bar-label">도면 핀 바로열기:</span>
+              <button type="button" class="shop-pin-chip" data-shop-pin="kitchen">📐 주방 상하부장·냉장고장</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="cafe">📐 카페장 (DP장)</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="living">📐 거실 무지주선반·수납장</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_left">📐 왼쪽 신발장 (거울)</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_right">📐 오른쪽 벤치 신발장</button>
+            </div>
+            <!-- Hanger B Plan H1100 Switch Interference Warning -->
+            <div class="hanger-warning-banner" id="hanger-warning-banner">
+              <strong>[! 스위치 간섭 주의 · B안]</strong> 침실2 문 옆 기존 스위치(H1100 추정)와 시스템행거 프레임 간격 확인 필요 — 서랍 돌출(D500) 및 문 회전반경(6,401~7,221) 간섭 없음 확인됨
+            </div>
+            <div class="cad-canvas-wrap" id="cad-canvas-wrap">
+              <svg id="cad-svg" class="cad-svg" role="group" aria-label="1/60 정밀 배선 및 가구 배치 CAD 도면"></svg>
+              <div class="cad-readout" id="cad-readout">x 0 · y 0 mm</div>
+              <div class="cad-hover-tip" id="cad-hover-tip" hidden></div>
+            </div>
+          </div>
+
+          <!-- Submode 3: 3D Walk (Three.js) -->
+          <div class="stage-viewport" id="stage-panel-3d" role="tabpanel" aria-labelledby="submode-tab-3d" hidden>
+            <div class="cad-toolbar">
+              <div class="cad-btn-group" id="v3-preset-bar" role="group" aria-label="3D 카메라 시점 프리셋"></div>
+              <div class="cad-btn-group">
+                <button type="button" class="cad-tool-btn" id="v3-night-btn" aria-pressed="false">밤 조명 켜기</button>
+              </div>
+            </div>
+            <div class="shop-pin-bar" id="v3-shop-pin-bar" role="group" aria-label="3D 시점 연동 가구 제작도면 바로가기">
+              <span class="shop-pin-bar-label">11/17 제작도면 · 시안 대조:</span>
+              <button type="button" class="shop-pin-chip" data-shop-pin="kitchen">📐 주방 제작도면 + 3D</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="cafe">📐 카페장 제작도면 + 3D</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="living">📐 거실 가구도면 + 3D</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_left">📐 현관 신발장 1·2 도면 + 3D</button>
+            </div>
+            <div class="view3d-wrap" id="view3d-wrap">
+              <div class="view3d-canvas" id="v3canvas"></div>
+              <canvas class="view3d-minimap" id="v3minimap" width="200" height="150" title="누르거나 끌면 그 자리 눈높이로 이동" aria-label="3D 위치 미니맵"></canvas>
+            </div>
+            <div class="view3d-caption" id="v3caption">3D 모형을 불러오는 중이거나 공간 시점을 선택하세요.</div>
+          </div>
+
+          <!-- Persistent Symbol Inspector -->
+          <div class="symbol-inspector" id="symbol-inspector" aria-live="polite">
+            <div class="symbol-inspector-header">
+              <span class="symbol-inspector-title" id="inspector-title">기호 · 공간 상세 인스펙터</span>
+              <span class="mono" id="inspector-coord" style="font-size:12px; color:var(--text-muted);">CAD/구역 연동</span>
+            </div>
+            <div class="symbol-inspector-body" id="inspector-body">
+              도면의 방 구역이나 조명·콘센트·가구·가전 기호를 선택하면 설치 높이(H), 규격, 관련 공정 내역 바로가기를 여기에 고정 표시합니다.
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Orthogonal View Tabs -->
+      <section class="dossier-column" aria-label="공종 내역 및 상세 안내">
+        <div class="view-tablist" role="tablist" aria-label="스튜디오 상세 뷰 탭">
+          <button type="button" role="tab" class="view-tab-btn is-active" id="tab-btn-scope" data-view-tab="scope" aria-selected="true" tabindex="0" aria-controls="panel-scope">
+            ① 공간·내역
+          </button>
+          <button type="button" role="tab" class="view-tab-btn" id="tab-btn-changes" data-view-tab="changes" aria-selected="false" tabindex="-1" aria-controls="panel-changes">
+            ② 설계·사양 변경
+          </button>
+          <button type="button" role="tab" class="view-tab-btn" id="tab-btn-schedule" data-view-tab="schedule" aria-selected="false" tabindex="-1" aria-controls="panel-schedule">
+            ③ 공정 일정
+          </button>
+          <button type="button" role="tab" class="view-tab-btn" id="tab-btn-specs" data-view-tab="specs" aria-selected="false" tabindex="-1" aria-controls="panel-specs">
+            ④ 자재·가전·도면
+          </button>
+        </div>
+
+        <!-- Tab 1: 공간·내역 (Room & Trade Scope) -->
+        <div class="view-tabpanel" id="panel-scope" role="tabpanel" aria-labelledby="tab-btn-scope">
+          <div class="dossier-section-card">
+            <div class="dossier-section-header">
+              <div>
+                <h2 class="dossier-section-title" id="scope-heading">공간 · 공종별 시공 내역서</h2>
+                <p class="brand-subtitle" id="scope-summary-line">선택된 공간의 직결 시공 내역과 세대 공통 기반 공정을 구분해 표시합니다.</p>
+              </div>
+              <div id="scope-filter-pills"></div>
+            </div>
+            <!-- Trade Filter Chips -->
+            <div class="trade-filter-bar" id="tradeFilter" role="group" aria-label="공종 필터"></div>
+            <!-- Grouped Trade Tables Container -->
+            <div id="quoteContainer"></div>
+          </div>
+
+          <!-- Common Base Scope Fold (세대 공통 기반 공정) -->
+          <details class="fold" id="commonFold" hidden>
+            <summary>
+              <span id="commonTitle">세대 공통 기반 공정 (선택 공간 외 공통 시공)</span>
+              <span class="status-badge is-supplied" id="commonBadge">접혀 있음</span>
+            </summary>
+            <div class="fold-body" id="commonContainer"></div>
+          </details>
+        </div>
+
+        <!-- Tab 2: 설계·사양 변경 (Work Mode: Zero Cost Statement, Zero Timeline, Zero Price) -->
+        <div class="view-tabpanel" id="panel-changes" role="tabpanel" aria-labelledby="tab-btn-changes" hidden>
+          <!-- Countertop Spec Confirmation -->
+          <section class="dossier-section-card" id="countertop-compare-section" aria-labelledby="countertop-section-title">
+            <div class="dossier-section-header">
+              <h2 class="dossier-section-title" id="countertop-section-title">주방 상판 확정 사양 (칸스톤 에덴그레이)</h2>
+            </div>
+            <div id="countertop-compare-body"></div>
+          </section>
+
+          <!-- 4 Key Change Highlights -->
+          <section class="dossier-section-card" id="highlights-section" aria-labelledby="highlights-section-title">
+            <div class="dossier-section-header">
+              <h2 class="dossier-section-title" id="highlights-section-title">주요 설계·사양 변경 하이라이트 (4대 핵심 변경)</h2>
+            </div>
+            <div class="highlights-grid" id="changeHighlights"></div>
+          </section>
+
+          <!-- 37 Changed Items List -->
+          <section class="dossier-section-card" id="changed-items-section" aria-labelledby="changed-items-title">
+            <div class="dossier-section-header">
+              <div>
+                <h2 class="dossier-section-title" id="changed-items-title">변경 품목 상세 목록 (총 37건)</h2>
+                <p class="brand-subtitle" id="changed-items-subtitle">신규 추가 14건 · 사양·물량 변경 15건 · 취소·제외 4건 · 고객 직접구매 4건</p>
+              </div>
+              <div class="cad-btn-group" id="diff-filter-group" role="group" aria-label="변경 상태 필터">
+                <button type="button" class="cad-tool-btn is-active" data-diff-filter="all" aria-pressed="true">전체 (37)</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="added" aria-pressed="false">[+ 추가] ▲ (14)</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="modified" aria-pressed="false">[~ 변경] ◆ (15)</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="cancelled" aria-pressed="false">[− 취소] ▼ (4)</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="supplied" aria-pressed="false">[★ 고객지급] (4)</button>
+              </div>
+            </div>
+            <div class="table-wrapper" tabindex="0" role="region" aria-labelledby="changed-items-title">
+              <table class="studio-table is-responsive-stack" id="diffTable"></table>
+            </div>
+          </section>
+        </div>
+
+        <!-- Tab 3: 공정 일정 (33-Day Schedule & D-Day) -->
+        <div class="view-tabpanel" id="panel-schedule" role="tabpanel" aria-labelledby="tab-btn-schedule" hidden>
+          <section class="dossier-section-card" aria-labelledby="schedule-title">
+            <div class="dossier-section-header">
+              <div>
+                <h2 class="dossier-section-title" id="schedule-title">33일 공정 일정표 및 D-Day 브리핑 (12/7 입주 기준)</h2>
+                <p class="brand-subtitle">공사 기간: 2026-11-02 (월) 착공 ~ 2026-12-04 (금) 최종 점검 및 보완 예비일 (총 33일 · 12/07 월 입주 예정)</p>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <label for="simDate" style="font-size:var(--text-xs); font-weight:700;">기준일 시뮬레이션:</label>
+                <input type="date" id="simDate" value="2026-11-17" min="2026-11-01" max="2026-12-20" class="cad-tool-btn">
+              </div>
+            </div>
+
+            <!-- 3-Card D-Day Banner -->
+            <div class="dday-banner-grid" id="todayBriefing"></div>
+
+            <!-- Interactive 10-Phase Gantt Chart -->
+            <div id="ganttChart" role="region" aria-label="33일 공정 간트 차트"></div>
+          </section>
+        </div>
+
+        <!-- Tab 4: 자재·가전·시안 (Materials, Appliances & Media) -->
+        <div class="view-tabpanel" id="panel-specs" role="tabpanel" aria-labelledby="tab-btn-specs" hidden>
+          <!-- 9 Appliances Opening & Entry Check -->
+          <section class="dossier-section-card" aria-labelledby="appliances-title">
+            <div class="dossier-section-header">
+              <div>
+                <h2 class="dossier-section-title" id="appliances-title">가전 9종 개구부 · 반입 경로 · 전용 콘센트 체크표</h2>
+                <p class="brand-subtitle">고객 보유/신규 가전 9종의 W×D×H 실측 치수와 가구장 개구부·전열 매칭 결과입니다.</p>
+              </div>
+            </div>
+            <!-- WashCombo Critical Entry Alert -->
+            <div class="appliance-warning-alert" id="washcombo-alert">
+              [! 반입 경로 필수 확인] 현관·터닝도어 통과 불가 — 침실2(입구 좌측방) 외창 탈거 후 사다리차 반입 필수 (워시콤보 FC2521TX6CX.CKOR · 본체 W700×D830×H1,350mm)
+            </div>
+            <div class="table-wrapper" tabindex="0" role="region" aria-labelledby="appliances-title">
+              <table class="studio-table is-responsive-stack" id="applianceTable"></table>
+            </div>
+          </section>
+
+          <!-- Final Material Spec Sheet -->
+          <section class="dossier-section-card" aria-labelledby="materials-title">
+            <div class="dossier-section-header">
+              <div>
+                <h2 class="dossier-section-title" id="materials-title">확정 자재 시방서 (타일 · 마루 · 필름 · 도배 · 상판 · 조명)</h2>
+                <p class="brand-subtitle">공간별·부위별 마감 자재 일람표입니다.</p>
+              </div>
+            </div>
+            <div id="materialSpecGrid" class="highlights-grid"></div>
+          </section>
+
+          <!-- 11/17 Confirmed Furniture Shop Drawings (5 Sheets) -->
+          <section class="dossier-section-card" aria-labelledby="shop-drawings-title">
+            <div class="dossier-section-header">
+              <div>
+                <h2 class="dossier-section-title" id="shop-drawings-title">11/17 확정 가구 제작도면 5종 (주방 · 카페장 · 거실 선반장 · 신발장 1·2)</h2>
+                <p class="brand-subtitle">확정 가구 제작도면(11/17)입니다. 카드를 클릭하거나 2D/3D 도면의 가구 핀을 누르면 확대 도면과 3D 시안을 함께 대조할 수 있습니다.</p>
+              </div>
+            </div>
+            <div class="gallery-grid" id="shopDrawingGallery"></div>
+          </section>
+
+          <!-- 12 3D Renderings Gallery -->
+          <section class="dossier-section-card" aria-labelledby="renders-title">
+            <div class="dossier-section-header">
+              <div>
+                <h2 class="dossier-section-title" id="renders-title">확정 3D 렌더링 시안 갤러리 (12컷)</h2>
+                <p class="brand-subtitle">카드를 클릭하면 고해상도 라이트박스 모달에서 확대 비교할 수 있습니다.</p>
+              </div>
+            </div>
+            <div class="gallery-grid" id="renderGallery"></div>
+          </section>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <dialog id="imageDialog" class="image-dialog" aria-labelledby="imageDialogTitle">
-    <form method="dialog"><button class="dialog-close" aria-label="닫기">닫기</button></form>
-    <img id="imageDialogImg" src="" alt="" />
-    <p id="imageDialogTitle"></p>
+  <!-- Mobile Floating Drawer Toggle Button -->
+  <button type="button" class="mobile-stage-fab" id="mobile-stage-fab" aria-expanded="true" aria-controls="spatial-stage">
+    도면 · 3D 접기/열기 ▴
+  </button>
+
+  <!-- Accessible Native <dialog> Lightbox -->
+  <dialog id="studio-lightbox" aria-labelledby="lightbox-title" closedby="any">
+    <div class="lightbox-inner">
+      <div class="lightbox-header">
+        <h2 id="lightbox-title" style="margin:0; font-size:var(--text-base); font-weight:700;">시안 확대 보기</h2>
+        <button type="button" class="cad-tool-btn" id="lightbox-close-btn">닫기 (Esc) ×</button>
+      </div>
+      <div class="lightbox-body">
+        <img id="lightbox-img" class="lightbox-img" src="" alt="">
+        <p id="lightbox-caption" style="margin:0; font-size:var(--text-xs); color:var(--text-secondary); text-align:center;"></p>
+      </div>
+      <div class="lightbox-footer">
+        <button type="button" class="cad-tool-btn" id="lightbox-prev-btn">← 이전 사진</button>
+        <span id="lightbox-counter" class="mono" style="font-size:var(--text-xs);">1 / 1</span>
+        <button type="button" class="cad-tool-btn" id="lightbox-next-btn">다음 사진 →</button>
+      </div>
+    </div>
   </dialog>
 
-  <script src="./app.js"></script>
+  <script src="./js/cad-data.js?v=8"></script>
+  <script src="./js/stage.js?v=8"></script>
+  <script src="./js/app.js?v=8"></script>
 </body>
 </html>

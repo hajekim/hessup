@@ -1,0 +1,361 @@
+/* ==========================================================================
+   HESSUP STUDIO — Layout & Responsive Breakpoints
+   Desktop (>=1120px): Asymmetric 2-Column Split Studio (48% Stage / 52% Dossier)
+   Tablet (768px~1119px): Collapsible Top Stage + Full-Width Dossier
+   Mobile (<768px): Single-Handed Stack + Bottom Sheet Spatial Drawer
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.48;
+  color: var(--text-primary);
+  background-color: var(--surface-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--surface-canvas);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* Tabular numerals for all numbers, dimensions, and currency */
+.num,
+.kpi-value,
+.mono,
+td[data-num],
+th[data-num],
+code {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Visually hidden utility (Screen Reader Only) */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip Link */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: var(--space-4);
+  z-index: 9999;
+  padding: var(--space-3) var(--space-5);
+  background: var(--accent-interactive);
+  color: var(--text-on-accent);
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  box-shadow: var(--shadow-float);
+  transition: top var(--dur-fast) var(--ease-out-quart);
+}
+.skip-link:focus {
+  top: var(--space-3);
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* Keyboard Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Strict Mode Visibility & Lock Gate Rules */
+.studio-unlock-card {
+  display: none;
+  max-width: 580px;
+  margin: 48px auto;
+  padding: 24px 28px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+}
+body.locked .studio-unlock-card {
+  display: block;
+}
+body.locked .studio-shell,
+body.locked .mobile-stage-fab,
+body.locked .search-box {
+  display: none !important;
+}
+
+[data-mode="owner"] .local-only {
+  display: none !important;
+}
+[data-mode="work"] .owner-only,
+[data-mode="work"] .local-only,
+[data-mode="work"] [data-price] {
+  display: none !important;
+}
+
+/* Studio Shell Container */
+.studio-shell {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 20px 36px;
+}
+
+/* Top Studio Header */
+.studio-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 20px;
+  margin: 0 0 10px;
+}
+
+.studio-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+}
+
+.brand-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 200px;
+}
+
+.brand-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.brand-mark {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+}
+
+.brand-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.brand-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* KPI Dossier Strip */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.kpi-strip.has-local-ext,
+[data-mode="work"] .kpi-strip {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Sticky Room Filter Bar */
+.room-filter-bar {
+  position: sticky;
+  top: 50px;
+  z-index: 50;
+  background: var(--surface-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 5px 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.room-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Asymmetric 2-Column Split Studio Grid (matches original 420px + 1fr, or full-width expanded stage for CAD/3D) */
+.studio-workspace {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.studio-workspace.is-stage-expanded {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Left Column: Sticky Spatial Stage */
+.spatial-stage-column {
+  position: sticky;
+  top: 98px;
+  max-height: calc(100vh - 110px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.studio-workspace.is-stage-expanded .spatial-stage-column {
+  position: relative;
+  top: 0;
+  max-height: none;
+  padding: 14px 16px;
+}
+
+.studio-workspace.is-stage-expanded .spatial-stage-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 14px;
+  align-items: start;
+}
+
+.studio-workspace.is-stage-expanded .stage-viewport {
+  grid-column: 1;
+}
+
+.studio-workspace.is-stage-expanded .symbol-inspector {
+  grid-column: 2;
+  position: sticky;
+  top: 108px;
+  max-height: 76vh;
+  overflow-y: auto;
+}
+
+/* Right Column: Orthogonal View Tabs */
+.dossier-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Mobile Floating Drawer Handle (Hidden on Desktop) */
+.mobile-stage-fab {
+  display: none;
+}
+
+/* Tablet Breakpoint (761px - 1024px: keep 2 columns with narrower stage like original) */
+@media (max-width: 1024px) {
+  .studio-workspace {
+    grid-template-columns: 310px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .studio-workspace.is-stage-expanded .spatial-stage-body {
+    grid-template-columns: 1fr;
+  }
+  .studio-workspace.is-stage-expanded .symbol-inspector {
+    grid-column: 1;
+    position: static;
+    max-height: none;
+  }
+  .kpi-strip,
+  [data-mode="work"] .kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  [data-mode="owner"] .kpi-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Mobile Breakpoint (<= 760px) */
+@media (max-width: 760px) {
+  .studio-workspace {
+    grid-template-columns: 1fr;
+  }
+  .spatial-stage-column {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+  .studio-shell {
+    padding: 0 12px 72px;
+  }
+  .studio-header {
+    padding: 8px 12px;
+    margin: 0 0 8px;
+  }
+  .kpi-strip,
+  [data-mode="owner"] .kpi-strip,
+  [data-mode="work"] .kpi-strip {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .room-filter-bar {
+    top: 84px;
+    padding: 5px 8px;
+  }
+  .spatial-stage-column.is-mobile-collapsed .spatial-stage-body {
+    display: none;
+  }
+  .mobile-stage-fab {
+    display: inline-flex;
+    position: fixed;
+    bottom: 14px;
+    right: 14px;
+    z-index: 80;
+    min-height: 40px;
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-primary);
+    color: var(--text-on-accent);
+    font-weight: 700;
+    font-size: 12.5px;
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-float);
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+}
