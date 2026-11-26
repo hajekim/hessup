@@ -183,8 +183,8 @@
                 안방 앞 비확장 발코니1 바닥 아래로 거실 확장부 난방 배관이 지나가는 것을 열화상 카메라로 확인했습니다(최고 약 58.6℃). 철거·타일 덧방 시 배관 손상 주의가 필요합니다.
                 <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
                   <button type="button" class="jump-pill-btn" data-jump-item="1-c-03">1-c-03 거실확장 난방연장 이동 →</button>
-                  <button type="button" class="jump-pill-btn" data-jump-item="2-b-03">2-b-03 발코니 타일 시공 이동 →</button>
-                  <button type="button" class="jump-pill-btn" data-jump-item="2-e-01">2-e-01 터닝도어 시공 이동 →</button>
+                  <button type="button" class="jump-pill-btn" data-jump-item="2-e-05">2-e-05 발코니 타일 시공 이동 →</button>
+                  <button type="button" class="jump-pill-btn" data-jump-item="2-c-11">2-c-11 터닝도어 시공 이동 →</button>
                 </div>
               </div>
               <div class="thermal-stage-grid" id="stage-thermal-grid"></div>
@@ -250,7 +250,7 @@
           <details class="fold owner-only" id="scopeCostStatementFold">
             <summary>
               <span>원가계산서 11행 (직접재료비 · 직접노무비 · 제경비 · 단수조정)</span>
-              <span class="mono num" style="font-size:var(--text-xs); color:var(--text-secondary);">공급가 88,600,000원 + 부가세 8,860,000원 = 총액 97,460,000원</span>
+              <span class="mono num" id="scope-cost-summary-badge" style="font-size:var(--text-xs); color:var(--text-secondary);">산출 내역 보기 ▾</span>
             </summary>
             <div class="fold-body">
               <div class="table-wrapper" tabindex="0" role="region" aria-label="원가계산서 11행 상세 표">
@@ -278,7 +278,7 @@
             <div class="dossier-section-header">
               <div>
                 <h2 class="dossier-section-title" id="timeline-section-title">견적서 버전별 변천 타임라인 (v1 → v5)</h2>
-                <p class="brand-subtitle">초안(v1 · 84,590,000원) 대비 최종 확정(v5 · 97,460,000원) 순증 +12,870,000원 (+15.2%)</p>
+                <p class="brand-subtitle" id="timeline-section-subtitle">버전별 견적 금액 및 사양 변천 내역</p>
               </div>
             </div>
             <div class="timeline-grid" id="timelineGrid"></div>
@@ -297,7 +297,7 @@
             <div class="dossier-section-header">
               <div>
                 <h2 class="dossier-section-title" id="cost-statement-title">원가계산서 11행 (v1 초안 대비 v5 확정 비교)</h2>
-                <p class="brand-subtitle">직접재료비 55,408,690원 + 직접노무비 16,920,000원 = 직접공사비 계 72,328,690원</p>
+                <p class="brand-subtitle" id="cost-statement-subtitle">직접재료비 · 직접노무비 · 제경비 · 공급가액 산출 근거</p>
               </div>
             </div>
             <div class="table-wrapper" tabindex="0" role="region" aria-labelledby="cost-statement-title">
@@ -310,14 +310,14 @@
             <div class="dossier-section-header">
               <div>
                 <h2 class="dossier-section-title" id="changed-items-title">변경 품목 상세 목록 (총 37건)</h2>
-                <p class="brand-subtitle" id="changed-items-subtitle">신규 추가 14건 · 사양·물량 변경 15건 · 취소·일부공제 4건 · 고객 직접구매 4건</p>
+                <p class="brand-subtitle" id="changed-items-subtitle">신규 추가 · 사양·물량 변경 · 취소·제외 · 고객 직접구매</p>
               </div>
               <div class="cad-btn-group" id="diff-filter-group" role="group" aria-label="변경 상태 필터">
                 <button type="button" class="cad-tool-btn is-active" data-diff-filter="all" aria-pressed="true">전체 (37)</button>
-                <button type="button" class="cad-tool-btn" data-diff-filter="added" aria-pressed="false">[+ 추가] ▲ (14)</button>
-                <button type="button" class="cad-tool-btn" data-diff-filter="modified" aria-pressed="false">[~ 변경] ◆ (15)</button>
-                <button type="button" class="cad-tool-btn" data-diff-filter="cancelled" aria-pressed="false">[− 취소] ▼ (4)</button>
-                <button type="button" class="cad-tool-btn" data-diff-filter="supplied" aria-pressed="false">[★ 고객지급] (4)</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="added" aria-pressed="false">[+ 추가] ▲</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="modified" aria-pressed="false">[~ 변경] ◆</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="cancelled" aria-pressed="false">[− 취소] ▼</button>
+                <button type="button" class="cad-tool-btn" data-diff-filter="supplied" aria-pressed="false">[★ 고객지급]</button>
               </div>
             </div>
             <div class="table-wrapper" tabindex="0" role="region" aria-labelledby="changed-items-title">

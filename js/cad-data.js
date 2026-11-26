@@ -25,7 +25,8 @@ mat('dewy', 0xf4f1ea, { r: .5 });       // 상부장 듀이클라우드
 mat('stone', 0xdedad3, { r: .35 });     // 칸스톤 에덴그레이
 mat('walnut', 0x5a3a26, { r: .6 }); mat('oakNat', 0xb58a5c, { r: .6 }); mat('birch', 0xd9bf98, { r: .6 });
 mat('mustard', 0xc99a2e, { r: .9 }); mat('tgreen', 0x6e7b5a, { r: .9 }); mat('mgreen', 0x4f6a4b, { r: .9 }); mat('black', 0x232323, { r: .7 });
-mat('beige', 0xd9cdb8, { r: .45 });   // LG 네이처 베이지 (벽보다 진하게) mat('clay', 0xcbb8a5, { r: .45 }); mat('screen', 0x101214, { r: .2, m: .3 });
+mat('beige', 0xd9cdb8, { r: .45 });   // LG 네이처 베이지 (벽보다 진하게)
+mat('clay', 0xcbb8a5, { r: .45 }); mat('screen', 0x101214, { r: .2, m: .3 });
 mat('white', 0xfafafa, { r: .5 }); mat('linen', 0xefe9df, { r: .95 }); mat('chrome', 0xb9bcbf, { r: .35, m: .25 });
 mat('glass', 0xbfd6dc, { r: .05, t: .28 }); mat('mirror', 0xcfdade, { r: .08, m: .2 });
 mat('light', 0xffffff, { e: 0xfff4dc, ei: 1.2 }); mat('lamp', 0xd9652b, { r: .5, e: 0x7a2e10, ei: .6 }); mat('steel', 0x8f9396, { r: .4, m: .6 });

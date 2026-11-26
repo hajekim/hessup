@@ -5,12 +5,12 @@
     { id: 'TH-02', src: './thermal_balcony1/02_boiler_controller_wiring.jpg', title: '02 · 보일러 온도조절기 배선 점검', temp: '실온', desc: '거실 벽면 보일러 컨트롤러 배선 및 결선 상태 확인', roomId: '거실', items: ['1-c-03'] },
     { id: 'TH-03', src: './thermal_balcony1/03_heating_manifold_thermal.jpg', title: '03 · 싱크대 하부 난방 분배기 열화상', temp: '54.8℃', desc: '주방 싱크대 하부 온수 분배기 각 밸브 순환 온도 확인', roomId: '주방', items: ['1-c-03', '2-h-09'] },
     { id: 'TH-04', src: './thermal_balcony1/04_boiler_controller_58c.jpg', title: '04 · 보일러 가동 온도 58.6℃ 도달 확인', temp: '58.6℃', desc: '난방수 최고 가동 온도 58.6℃ 세팅 후 배관 추적 촬영', roomId: '발코니3(세탁실)', items: ['1-c-03'] },
-    { id: 'TH-05', src: './thermal_balcony1/05_balcony1_corner_loop_left.jpg', title: '05 · 발코니1 좌측 코너 난방 루프', temp: '48.1℃', desc: '안방 발코니1 좌측 바닥 아래 통과하는 난방 코일 루프', roomId: '발코니1(안방)', items: ['1-c-03', '2-e-03'] },
-    { id: 'TH-06', src: './thermal_balcony1/06_balcony1_corner_loop_right.jpg', title: '06 · 발코니1 우측 코너 난방 루프', temp: '47.9℃', desc: '발코니1 우측 코너 구간 바닥 매립 배관 열선 궤적', roomId: '발코니1(안방)', items: ['1-c-03', '2-e-03'] },
-    { id: 'TH-07', src: './thermal_balcony1/07_balcony1_window_side_pipes_1.jpg', title: '07 · 발코니1 외창 측 바닥 배관 (1)', temp: '46.5℃', desc: '발코니1 외창(2-c-04) 하단 벽면 인접 배관 경로 (타일 덧방 주의)', roomId: '발코니1(안방)', items: ['2-e-03', '2-c-04'] },
-    { id: 'TH-08', src: './thermal_balcony1/08_balcony1_inner_corner_pipes.jpg', title: '08 · 발코니1 내측 모서리 배관 분기', temp: '49.0℃', desc: '안방 분합창(2-c-03) 및 터닝도어(2-c-11) 인접 바닥 배관', roomId: '발코니1(안방)', items: ['2-c-11', '2-e-03'] },
+    { id: 'TH-05', src: './thermal_balcony1/05_balcony1_corner_loop_left.jpg', title: '05 · 발코니1 좌측 코너 난방 루프', temp: '48.1℃', desc: '안방 발코니1 좌측 바닥 아래 통과하는 난방 코일 루프', roomId: '발코니1(안방)', items: ['1-c-03', '2-e-05'] },
+    { id: 'TH-06', src: './thermal_balcony1/06_balcony1_corner_loop_right.jpg', title: '06 · 발코니1 우측 코너 난방 루프', temp: '47.9℃', desc: '발코니1 우측 코너 구간 바닥 매립 배관 열선 궤적', roomId: '발코니1(안방)', items: ['1-c-03', '2-e-05'] },
+    { id: 'TH-07', src: './thermal_balcony1/07_balcony1_window_side_pipes_1.jpg', title: '07 · 발코니1 외창 측 바닥 배관 (1)', temp: '46.5℃', desc: '발코니1 외창(2-c-04) 하단 벽면 인접 배관 경로 (타일 덧방 주의)', roomId: '발코니1(안방)', items: ['2-e-05', '2-c-04'] },
+    { id: 'TH-08', src: './thermal_balcony1/08_balcony1_inner_corner_pipes.jpg', title: '08 · 발코니1 내측 모서리 배관 분기', temp: '49.0℃', desc: '안방 분합창(2-c-03) 및 터닝도어(2-c-11) 인접 바닥 배관', roomId: '발코니1(안방)', items: ['2-c-11', '2-e-05'] },
     { id: 'TH-09', src: './thermal_balcony1/09_balcony1_to_living_pipes.jpg', title: '09 · 발코니1 → 거실 확장부 배관 연결부', temp: '51.2℃', desc: '터닝도어 하단 문턱 아래로 거실 확장부 난방관이 통과하는 핵심 구간', roomId: '발코니1(안방)', items: ['1-c-03', '2-c-11'] },
-    { id: 'TH-10', src: './thermal_balcony1/10_balcony1_window_side_pipes_2.jpg', title: '10 · 발코니1 외창 측 바닥 배관 (2)', temp: '46.8℃', desc: '발코니1 전면 타일(66125) 시공 시 그라인더 커팅 깊이 주의 구간', roomId: '발코니1(안방)', items: ['2-e-03'] }
+    { id: 'TH-10', src: './thermal_balcony1/10_balcony1_window_side_pipes_2.jpg', title: '10 · 발코니1 외창 측 바닥 배관 (2)', temp: '46.8℃', desc: '발코니1 전면 타일(66125) 시공 시 그라인더 커팅 깊이 주의 구간', roomId: '발코니1(안방)', items: ['2-e-05'] }
   ];
 
   // 11/17 Confirmed Furniture Shop Drawings (5 Sheets) + Balcony 1 Pin
@@ -109,7 +109,7 @@
         './img/Image_3E7A9403-D90F-420E-81C6-93E6CE2C2343.png',
         './img/Image_0EF9CA83-BCC0-4ABA-84B7-6DABB20FFAAA.png'
       ],
-      items: ['2-h-01', '1-b-13'],
+      items: ['2-h-05', '1-b-13'],
       v3Idx: 3
     },
     {
@@ -133,7 +133,7 @@
         './img/Image_0EF9CA83-BCC0-4ABA-84B7-6DABB20FFAAA.png',
         './img/Image_3E7A9403-D90F-420E-81C6-93E6CE2C2343.png'
       ],
-      items: ['2-h-07', '2-h-01', '2-h-04'],
+      items: ['2-h-05', '2-h-04', '2-e-03'],
       v3Idx: 3
     }
   ];
@@ -255,6 +255,7 @@
   /* ---------- Inspect a 11/17 Furniture Shop Drawing Pin ---------- */
   function inspectShopDrawing(pinId, openModal = false) {
     if (pinId === 'balcony1') {
+      if (!stageState.hasThermal) return;
       stageState.activeShopPin = 'balcony1';
       updateInspector(
         '[열화상 점검] 발코니1 바닥 XL 난방배관 10컷',
@@ -268,7 +269,7 @@
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button type="button" class="copy-action-btn" data-open-thermal-lightbox="0">열화상 10컷 크게 보기 🔍</button>
             <button type="button" class="jump-pill-btn" data-jump-item="1-c-03">1-c-03 난방연장 내역 ↘</button>
-            <button type="button" class="jump-pill-btn" data-jump-item="2-e-03">2-e-03 발코니 타일 ↘</button>
+            <button type="button" class="jump-pill-btn" data-jump-item="2-e-05">2-e-05 발코니 타일 ↘</button>
           </div>
         </div>`
       );
@@ -286,8 +287,8 @@
 
     const shopIdx = SHOP_DRAWINGS.findIndex(d => d.id === sd.id);
     const bullets = sd.checkPoints.map(c => `<li>${esc(scrubWorkText(c))}</li>`).join('');
-    const renderThumbs = (sd.renders || []).slice(0, 2).map(rSrc =>
-      `<img src="${esc(rSrc)}" alt="${esc(sd.title)} 3D 시안" style="width:100%; height:82px; object-fit:cover; border-radius:6px; border:1px solid var(--border-subtle); cursor:pointer;" data-open-shop-slide="${esc(sd.id)}" data-slide-src="${esc(rSrc)}">`
+    const renderThumbs = (sd.renders || []).slice(0, 2).map((rSrc, rIdx) =>
+      `<img src="${esc(rSrc)}" alt="${esc(sd.title)} 3D 시안" style="width:100%; height:82px; object-fit:cover; border-radius:6px; border:1px solid var(--border-subtle); cursor:pointer;" data-open-shop-slide="${esc(sd.id)}" data-shop-idx="${shopIdx}" data-render-offset="${rIdx + 1}">`
     ).join('');
     const itemPills = (sd.items || []).map(code =>
       `<button type="button" class="jump-pill-btn" data-jump-item="${esc(code)}">${esc(code)} 내역 ↘</button>`
@@ -567,7 +568,7 @@
         const t = typeMap[f.t];
         if (!t) return;
         const c = LIGHT_COLORS[t.id] || '#d9480f';
-        const itemCode = t.id === 'PEND' ? '1-b-11' : (t.id === 'T3' || t.id === 'COB' ? '1-b-14' : '1-b-06');
+        const itemCode = t.id === 'PEND' ? '1-b-11' : (t.id === 'T3' || t.id === 'COB' ? '1-b-10' : (t.id === 'SENSOR' ? '1-b-13' : '1-b-09'));
         const tip = `${t.name}<br>x ${fmt(f.x)} · y ${fmt(f.y)} mm${f.room ? ' · ' + f.room : ''}${f.memo ? '<br>' + f.memo : ''}`;
         let shape = '';
         if (t.id === 'T3' || t.id === 'COB') {
@@ -908,9 +909,14 @@
         </div>
       </article>`;
 
-    const html = THERMAL_CUTS.map(cardHtml).join('');
-    if (stageGrid) stageGrid.innerHTML = html;
-    if (tabGallery) tabGallery.innerHTML = html;
+    if (stageState.hasThermal) {
+      const html = THERMAL_CUTS.map(cardHtml).join('');
+      if (stageGrid) stageGrid.innerHTML = html;
+      if (tabGallery) tabGallery.innerHTML = html;
+    } else {
+      if (stageGrid) stageGrid.innerHTML = '';
+      if (tabGallery) tabGallery.innerHTML = '';
+    }
 
     if (shopGallery) {
       shopGallery.innerHTML = SHOP_DRAWINGS.map((sd, idx) => `
@@ -971,7 +977,8 @@
 
     // Auto-populate shop drawing inspector if room has a confirmed shop drawing
     if (stageState.submode === 'cad' || stageState.submode === '3d') {
-      const roomToPin = { '주방': 'kitchen', '거실': 'living', '현관': 'shoe_left', '발코니1(안방)': 'balcony1' };
+      const roomToPin = { '주방': 'kitchen', '거실': 'living', '현관': 'shoe_left' };
+      if (stageState.hasThermal) roomToPin['발코니1(안방)'] = 'balcony1';
       if (roomToPin[stageState.activeRoom]) {
         inspectShopDrawing(roomToPin[stageState.activeRoom], false);
       }
@@ -1167,9 +1174,9 @@
             const cadNameMap = {
               '주방 · 식당': 'kitchen',
               '거실 (확장부 포함)': 'living',
-              '현관': 'shoe_left',
-              '발코니1': 'balcony1'
+              '현관': 'shoe_left'
             };
+            if (stageState.hasThermal) cadNameMap['발코니1'] = 'balcony1';
             if (cadNameMap[r.name]) {
               inspectShopDrawing(cadNameMap[r.name], false);
               return true;
@@ -1340,6 +1347,14 @@
       const openThermalBtn = e.target.closest('[data-open-thermal-lightbox]');
       if (openThermalBtn) {
         appCallbacks.onOpenLightbox('thermal', Number(openThermalBtn.getAttribute('data-open-thermal-lightbox') || 0));
+        return;
+      }
+
+      const openShopSlideImg = e.target.closest('[data-open-shop-slide]');
+      if (openShopSlideImg) {
+        const shopIdx = Number(openShopSlideImg.getAttribute('data-shop-idx') || 0);
+        const renderOffset = Number(openShopSlideImg.getAttribute('data-render-offset') || 1);
+        appCallbacks.onOpenLightbox('shop', shopIdx, renderOffset);
       }
     });
 

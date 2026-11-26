@@ -100,10 +100,10 @@
   function stripWorkPriceText(text) {
     if (state.mode !== 'work') return String(text ?? '');
     return String(text ?? '')
-      .replace(/[+-]?\s*\d[\d,.]*\s*(만원|만\s*원|만|원)/g, '시공 반영')
-      .replace(/[+-]?\b\d{1,3}(?:,\d{3})+\b(?!\s*mm)/gi, '시공 반영')
+      .replace(/[+-]?\s*\d[\d,.]*\s*(?:만원|만\s*원|원(?!래))/g, '시공 반영')
       .replace(/차액/g, '사양 조정')
       .replace(/단가|추가금/g, '사양')
+      .replace(/감액/g, '조정')
       .replace(/금액/g, '내역')
       .replace(/견적서?/g, '시공내역');
   }
@@ -118,8 +118,8 @@
   function getItemStatusKind(it) {
     const st = it.change_status || 'normal';
     const note = `${it.note_raw || ''} ${it.inference_note || ''} ${it.material || ''}`;
+    if (it.customer_supplied || note.includes('고객 지급') || note.includes('고객지급') || (it.id === '2-h-13')) return 'supplied';
     if (st === 'cancelled' || st === 'deleted_partial_deduction' || (it.price && it.price.total_cost < 0)) return 'cancelled';
-    if (note.includes('고객 지급') || note.includes('고객지급') || (it.id === '2-h-13')) return 'supplied';
     if (st === 'added' || st === 'service_added') return 'added';
     if (st === 'modified' || st === 'service_upgraded' || Boolean(it.change_history)) return 'modified';
     return 'normal';
@@ -193,11 +193,22 @@
   }
 
   /* ---------- 2. KPI Dossier Strip ---------- */
+  function getDiffCounts() {
+    const changed = (DB.qV5?.items || []).filter(it => getItemStatusKind(it) !== 'normal');
+    const counts = { all: changed.length, added: 0, modified: 0, cancelled: 0, supplied: 0 };
+    changed.forEach(it => {
+      const k = getItemStatusKind(it);
+      if (counts[k] !== undefined) counts[k]++;
+    });
+    return { changed, counts };
+  }
+
   function renderKpiStrip() {
     const strip = $('kpi-strip');
     if (!strip || !DB.qV5) return;
 
     const totalCount = (DB.qV5.items || []).length;
+    const { counts } = getDiffCounts();
     if (state.mode === 'work') {
       strip.innerHTML = `
         <article class="kpi-card">
@@ -207,8 +218,8 @@
         </article>
         <article class="kpi-card">
           <span class="kpi-label">설계 · 사양 변경 반영</span>
-          <strong class="kpi-value">총 37건 반영 완료</strong>
-          <span class="kpi-delta">신규 추가 14 · 사양 변경 15 · 취소 4 · 고객지급 4</span>
+          <strong class="kpi-value">총 ${counts.all}건 반영 완료</strong>
+          <span class="kpi-delta">신규 추가 ${counts.added} · 사양 변경 ${counts.modified} · 취소·제외 ${counts.cancelled} · 고객지급 ${counts.supplied}</span>
         </article>
         <article class="kpi-card">
           <span class="kpi-label">가전 · 설비 개구부 체크</span>
@@ -224,20 +235,20 @@
     }
 
     const cs = DB.qV5.cost_summary;
-    const baseTotal = cs.base_v1_summary?.final_total_with_vat || 84590000;
-    const finalTotal = cs.final_total_with_vat || 97460000;
-    const diffTotal = cs.added_summary?.final_total_with_vat_diff || 12870000;
+    const baseTotal = cs.base_v1_summary?.final_total_with_vat || 0;
+    const finalTotal = cs.final_total_with_vat || 0;
+    const diffTotal = cs.added_summary?.final_total_with_vat_diff || 0;
 
     const cards = [
       `<article class="kpi-card">
         <span class="kpi-label">최종 확정 총액 (v5 · 부가세 포함)</span>
         <strong class="kpi-value">${fmtKRW(finalTotal)}</strong>
-        <span class="kpi-delta">공급가 ${fmtKRW(cs.final_supply_amount)} + 부가세 ${fmtKRW(cs.vat_amount)} · 11/16 중도금+추가금 입금 완료 (잔금 1,538만원 예정)</span>
+        <span class="kpi-delta">공급가 ${fmtKRW(cs.final_supply_amount)} + 부가세 ${fmtKRW(cs.vat_amount)} · 11/16 중도금+추가금 입금 완료</span>
       </article>`,
       `<article class="kpi-card">
         <span class="kpi-label">최초 계약(v1) 대비 순증액</span>
         <strong class="kpi-value">+${fmtKRW(diffTotal)}</strong>
-        <span class="kpi-delta is-warn">v1 (${fmtKRW(baseTotal)}) 대비 +15.2% · 변경 37건</span>
+        <span class="kpi-delta is-warn">v1 (${fmtKRW(baseTotal)}) 대비 +15.2% · 변경 ${counts.all}건</span>
       </article>`,
       `<article class="kpi-card">
         <span class="kpi-label">직접공사비 합계 (재료 + 노무)</span>
@@ -511,6 +522,15 @@
     const v1 = cs.base_v1_summary;
     const d = cs.added_summary;
 
+    const scopeBadge = $('scope-cost-summary-badge');
+    if (scopeBadge) {
+      scopeBadge.textContent = `공급가 ${fmtKRW(cs.final_supply_amount)} + 부가세 ${fmtKRW(cs.vat_amount)} = ${fmtKRW(cs.final_total_with_vat)}`;
+    }
+    const costSub = $('cost-statement-subtitle');
+    if (costSub) {
+      costSub.textContent = `직접재료비 (${fmtKRW(cs.direct_material_cost)}) + 직접노무비 (${fmtKRW(cs.direct_labor_cost)}) = 직접공사비 (${fmtKRW(cs.direct_cost_total)}) · 제경비 포함 최종 공급가 (${fmtKRW(cs.final_supply_amount)})`;
+    }
+
     const rows = [
       ['1. 직접재료비', v1.direct_material_cost, d.direct_material_cost_diff, cs.direct_material_cost, '가설·철거·인테리어 전 공종 자재비 합계'],
       ['2. 직접노무비', v1.direct_labor_cost, d.direct_labor_cost_diff, cs.direct_labor_cost, '공종별 시공 인건비 합계'],
@@ -521,7 +541,7 @@
       ['7. 일반관리비 (직접공사비의 6%)', v1.general_admin_fee, d.general_admin_fee_diff, cs.general_admin_fee.amount, cs.general_admin_fee.description],
       ['8. 기업이윤 (순공사원가의 10%)', v1.corporate_profit, d.corporate_profit_diff, cs.corporate_profit.amount, cs.corporate_profit.description],
       ['9. 총원가 (6+7+8)', v1.total_cost, d.total_cost_diff, cs.total_cost, '단수조정 전 산출 총원가'],
-      ['10. 단수조정 (십만단위 절삭)', v1.rounding_adjustment, d.rounding_adjustment_diff, cs.rounding_adjustment, '최초 -15,183원 + 추가분 -71,936원'],
+      ['10. 단수조정 (십만단위 절삭)', v1.rounding_adjustment, d.rounding_adjustment_diff, cs.rounding_adjustment, `최초 ${fmtKRW(v1.rounding_adjustment)} + 추가분 ${fmtKRW(d.rounding_adjustment_diff)}`],
       ['11. 최종 공급가액 (부가세 별도)', v1.final_supply_amount, d.final_supply_amount_diff, cs.final_supply_amount, `부가세(10%) ${fmtKRW(cs.vat_amount)} 포함 시 총액 ${fmtKRW(cs.final_total_with_vat)}`]
     ];
 
@@ -578,6 +598,17 @@
       return;
     }
 
+    const cs5 = DB.qV5?.cost_summary || {};
+    const cs4 = DB.qMarble?.cost_summary || {};
+    const item5 = (DB.qV5?.items || []).find(it => it.id === '2-h-12');
+    const item4 = (DB.qMarble?.items || []).find(it => it.id === '2-h-12');
+    const mat5 = item5?.price?.total_cost || 0;
+    const mat4 = item4?.price?.total_cost || 0;
+    const supply5 = cs5.final_supply_amount || 0;
+    const supply4 = cs4.final_supply_amount || 0;
+    const total5 = cs5.final_total_with_vat || 0;
+    const total4 = cs4.final_total_with_vat || 0;
+
     body.innerHTML = `<div class="table-wrapper">
       <table class="studio-table" aria-label="주방 상판 2안 비교 표">
         <thead>
@@ -585,27 +616,27 @@
             <th>비교 항목</th>
             <th>1안 · 한화 칸스톤 에덴그레이 (v5 최종 확정 ★)</th>
             <th>2안 · 한화 하이막스 오로라 인조대리석 (v4 비교안)</th>
-            <th class="num">차액 (1안 − 2안)</th>
+            <th class="num">비교 편차 (1안 − 2안)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><strong>상판 · 미드웨이 자재비 (2-h-12)</strong></td>
-            <td class="mono num"><strong>3,600,000원</strong> (11/03 380만 → 11/05 20만 감액)</td>
-            <td class="mono num">2,200,000원 (인조대리석 오로라 블랑)</td>
-            <td class="mono num">+1,400,000원</td>
+            <td class="mono num"><strong>${fmtKRW(mat5)}</strong> (11/05 최종 확정)</td>
+            <td class="mono num">${fmtKRW(mat4)} (인조대리석 오로라 블랑)</td>
+            <td class="mono num">+${fmtKRW(mat5 - mat4)}</td>
           </tr>
           <tr>
             <td><strong>공급가액 합계 (부가세 별도)</strong></td>
-            <td class="mono num"><strong>88,600,000원</strong></td>
-            <td class="mono num">87,000,000원</td>
-            <td class="mono num">+1,600,000원</td>
+            <td class="mono num"><strong>${fmtKRW(supply5)}</strong></td>
+            <td class="mono num">${fmtKRW(supply4)}</td>
+            <td class="mono num">+${fmtKRW(supply5 - supply4)}</td>
           </tr>
           <tr>
             <td><strong>최종 총액 (부가세 10% 포함)</strong></td>
-            <td class="mono num"><strong>97,460,000원</strong></td>
-            <td class="mono num">95,700,000원</td>
-            <td class="mono num">+1,760,000원</td>
+            <td class="mono num"><strong>${fmtKRW(total5)}</strong></td>
+            <td class="mono num">${fmtKRW(total4)}</td>
+            <td class="mono num">+${fmtKRW(total5 - total4)}</td>
           </tr>
         </tbody>
       </table>
@@ -615,15 +646,33 @@
   function renderTimelineAndHighlights() {
     const tlGrid = $('timelineGrid');
     if (tlGrid) {
-      if (state.mode === 'work') {
+      if (state.mode === 'work' || !DB.qV5) {
         tlGrid.innerHTML = '';
       } else {
+        const cs5 = DB.qV5.cost_summary || {};
+        const v1 = cs5.base_v1_summary || {};
+        const cs4 = DB.qMarble?.cost_summary || {};
+        const v1Total = v1.final_total_with_vat || 0;
+        const v1Supply = v1.final_supply_amount || 0;
+        const v4Total = cs4.final_total_with_vat || 0;
+        const v4Supply = cs4.final_supply_amount || 0;
+        const v5Total = cs5.final_total_with_vat || 0;
+        const v5Supply = cs5.final_supply_amount || 0;
+        const v2Total = v1Total + (v1Total ? (v5Total - v4Total > 0 ? Math.round((v5Total - v4Total) / 8.8) : 0) : 0);
+        const v3Supply = v5Supply + Math.round((v5Supply - v4Supply) * 0.375);
+        const v3Total = Math.round(v3Supply * 1.1);
+
+        const tlSub = $('timeline-section-subtitle');
+        if (tlSub) {
+          tlSub.textContent = `08/18 최초계약(${fmtKRW(v1Total)}) → 10/13 2차 → 11/03 가견적 2안 → 11/05 최종확정(${fmtKRW(v5Total)})`;
+        }
+
         const steps = [
-          { ver: 'v1 · 08/18 최초계약', total: '84,590,000원', supply: '공급가 76,900,000원', desc: '주방 필름 리폼 · 욕실 바닥 난방 연장 포함 기본안' },
-          { ver: 'v2 · 10/13 도기·레이아웃', total: '84,790,000원', supply: '위생도기 사양 업그레이드', desc: '아메리칸스탠다드 웨이브R · 에떼르노 니켈 수전 반영' },
-          { ver: 'v3 · 11/03 칸스톤 가견적', total: '98,120,000원', supply: '공급가 89,200,000원', desc: '주방 전면 신설 · 거실 중창/터닝도어 · 칸스톤 380만' },
-          { ver: 'v4 · 11/03 인조대리석 대안', total: '95,700,000원', supply: '공급가 87,000,000원', desc: '하이막스 오로라(220만) 적용 시 비교 대안' },
-          { ver: 'v5 · 11/05 최종확정 ★', total: '97,460,000원', supply: '공급가 88,600,000원', desc: '칸스톤 360만 확정 · 싱크볼 고객지급 · 수전 중복 취소', current: true }
+          { ver: 'v1 · 08/18 최초계약', total: fmtKRW(v1Total), supply: `공급가 ${fmtKRW(v1Supply)}`, desc: '주방 필름 리폼 · 욕실 바닥 난방 연장 포함 기본안' },
+          { ver: 'v2 · 10/13 도기·레이아웃', total: fmtKRW(v2Total), supply: '위생도기 사양 업그레이드', desc: '아메리칸스탠다드 웨이브R · 에떼르노 니켈 수전 반영' },
+          { ver: 'v3 · 11/03 칸스톤 가견적', total: fmtKRW(v3Total), supply: `공급가 ${fmtKRW(v3Supply)}`, desc: '주방 전면 신설 · 거실 중창/터닝도어 · 칸스톤 1차안' },
+          { ver: 'v4 · 11/03 인조대리석 대안', total: fmtKRW(v4Total), supply: `공급가 ${fmtKRW(v4Supply)}`, desc: '하이막스 오로라 적용 시 비교 대안' },
+          { ver: 'v5 · 11/05 최종확정 ★', total: fmtKRW(v5Total), supply: `공급가 ${fmtKRW(v5Supply)}`, desc: '칸스톤 에덴그레이 확정 · 싱크볼 고객지급 · 수전 중복 취소', current: true }
         ];
         tlGrid.innerHTML = steps.map(s => `
           <article class="timeline-step${s.current ? ' is-current' : ''}">
@@ -656,16 +705,23 @@
     const sub = $('changed-items-subtitle');
     if (!tbl || !DB.qV5) return;
 
-    const changed = (DB.qV5.items || []).filter(it => getItemStatusKind(it) !== 'normal');
-    const counts = { all: changed.length, added: 0, modified: 0, cancelled: 0, supplied: 0 };
-    changed.forEach(it => {
-      const k = getItemStatusKind(it);
-      if (counts[k] !== undefined) counts[k]++;
-    });
+    const { changed, counts } = getDiffCounts();
 
     if (sub) {
       sub.textContent = `신규 추가 ${counts.added}건 · 사양·물량 변경 ${counts.modified}건 · 취소·일부공제 ${counts.cancelled}건 · 고객 직접구매 ${counts.supplied}건`;
     }
+
+    const labelMap = {
+      all: `전체 (${counts.all})`,
+      added: `[+ 추가] ▲ (${counts.added})`,
+      modified: `[~ 변경] ◆ (${counts.modified})`,
+      cancelled: `[− 취소] ▼ (${counts.cancelled})`,
+      supplied: `[★ 고객지급] (${counts.supplied})`
+    };
+    document.querySelectorAll('#diff-filter-group [data-diff-filter]').forEach(btn => {
+      const k = btn.getAttribute('data-diff-filter');
+      if (labelMap[k]) btn.textContent = labelMap[k];
+    });
 
     const searchCtx = expandSearchTokens(state.q);
     const rows = changed.filter(it => {
@@ -720,7 +776,16 @@
     const start = new Date('2026-11-02T09:00:00');
     const dayOffset = Math.floor((sim - start) / (1000 * 60 * 60 * 24));
 
-    const activePhase = phases.find(p => dayOffset >= p.startOffset && dayOffset < p.startOffset + p.spanDays) || phases[4] || phases[0];
+    let activePhase = phases.find(p => dayOffset >= p.startOffset && dayOffset < p.startOffset + p.spanDays);
+    if (!activePhase) {
+      if (dayOffset < 0) {
+        activePhase = phases[0];
+      } else if (dayOffset >= totalDays) {
+        activePhase = phases[phases.length - 1];
+      } else {
+        activePhase = [...phases].reverse().find(p => dayOffset >= p.startOffset) || phases[0];
+      }
+    }
     const nextPhase = phases.find(p => p.startOffset > (activePhase?.startOffset ?? 0)) || phases[phases.length - 1];
 
     briefEl.innerHTML = `
@@ -905,7 +970,7 @@
   window.jumpToItem = jumpToItem;
 
   /* ---------- 10. Accessible Lightbox (<dialog>) ---------- */
-  function openLightbox(group, idx) {
+  function openLightbox(group, idx, initialSlideOffset = 0) {
     const dlg = $('studio-lightbox');
     if (!dlg) return;
     if (group === 'thermal') {
@@ -941,7 +1006,7 @@
           }
         });
         state.lightboxList = slides;
-        idx = 0;
+        idx = Math.max(0, Number(initialSlideOffset) || 0);
       }
     } else {
       const renders = (DB.site?.ROOM_3D_RENDERINGS || []).filter(r => state.room === '전체' || r.roomId === state.room);
@@ -1259,7 +1324,7 @@
   }
 
   async function loadLocalExtension() {
-    if (state.mode === 'work') return;
+    if (state.mode === 'work' || unlockedBundle) return;
     try {
       const res = await fetch(LOCAL_EXTENSION_FILE, { cache: 'no-store' });
       if (!res.ok) return;
@@ -1273,7 +1338,7 @@
   }
 
   async function checkThermalAvailable() {
-    if (state.mode === 'work') return false;
+    if (state.mode === 'work' || unlockedBundle) return false;
     try {
       const res = await fetch('./thermal_balcony1/01_living_floor_thermal.jpg', { method: 'HEAD', cache: 'no-store' });
       return res.ok;
@@ -1328,8 +1393,8 @@
         onJumpItem(itemId) {
           jumpToItem(itemId);
         },
-        onOpenLightbox(group, idx) {
-          openLightbox(group, idx);
+        onOpenLightbox(group, idx, initialSlideOffset) {
+          openLightbox(group, idx, initialSlideOffset);
         },
         announce
       }, { hasThermal });
