@@ -192,9 +192,9 @@
     const sub = $('header-subtitle');
     if (sub) {
       if (state.mode === 'work') {
-        sub.textContent = '시공·자재·도면·일정 안내 (2026. 11. 17 현장 업데이트)';
+        sub.textContent = '시공·자재·도면·일정 안내 (2026. 11. 26 현장 업데이트)';
       } else {
-        sub.textContent = '최초 계약 20260818 · 최종 확정 202601105 (v5 · 칸스톤 에덴그레이 확정)';
+        sub.textContent = '최초 계약 20260818 · 최종 확정 202601105 (v5 · 칸스톤 에덴그레이 확정 · 11/26 공정 반영)';
       }
     }
     document.querySelectorAll('.owner-only').forEach(el => {
@@ -237,7 +237,7 @@
           <span class="kpi-delta is-warn">[! 필수] 워시콤보 침실2 외창 사다리차 반입</span>
         </article>
         <article class="kpi-card">
-          <span class="kpi-label">33일 표준 공정 현황 (11/16 갱신)</span>
+          <span class="kpi-label">33일 표준 공정 현황 (11/26 갱신)</span>
           <strong class="kpi-value">10대 공정 · ${esc(state.simDate)}</strong>
           <span class="kpi-delta">착공 11/02 ~ 예비일 12/04 (12/07 입주 예정)</span>
         </article>`;
@@ -810,9 +810,9 @@
         <p style="margin:0; font-size:12.5px; color:var(--text-secondary);">${esc(stripWorkPriceText(nextPhase.workDetails))}</p>
       </article>
       <article class="dday-card">
-        <span class="kpi-label">현장 주요 점검 · 반입 · 입주 일정</span>
-        <strong style="font-size:15px; display:block; margin:4px 0;">11/20 천장 전 누수 수리 · 싱크볼 11/20 이후 반입 · 12/07 입주</strong>
-        <p style="margin:0; font-size:12.5px; color:var(--text-secondary);">공용욕실 윗집 배관 교체(11/20 SMC 천장 전 확인) · 주방 가구(11/26) 전 깜보르떼 싱크볼 도착 · 12/04 최종 점검 예비일</p>
+        <span class="kpi-label">현장 주요 점검 · 반입 · 입주 일정 (11/26 갱신)</span>
+        <strong style="font-size:15px; display:block; margin:4px 0;">11/27 도기·전기 + 블라인드 미팅 · 11/30 상판/싱크볼·중문·건조대 · 12/07 입주</strong>
+        <p style="margin:0; font-size:12.5px; color:var(--text-secondary);">11/24 퍼티 완전 건조 후 11/25-26 도배 및 가구 마무리 · 11/27(금) 오후 하루라온 커튼/블라인드 현장 미팅 · 11/30(월) 주방 칸스톤 상판·깜보르떼 싱크볼 최종 설치 및 10:30 발코니 LED 전동 빨래건조대 설치 · 12/03 항균 바이오 실리콘 마감</p>
       </article>`;
 
     ganttEl.innerHTML = `<div class="table-wrapper">
