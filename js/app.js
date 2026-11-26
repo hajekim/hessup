@@ -10,6 +10,16 @@
   const studioExtensions = [];
   window.registerStudioExtension = ext => studioExtensions.push(ext);
 
+  function getDefaultSimDate() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const iso = `${yyyy}-${mm}-${dd}`;
+    if (iso >= '2026-11-01' && iso <= '2026-12-20') return iso;
+    return '2026-11-26';
+  }
+
   const state = {
     mode: PAGE_MODE,     // locked to 'work' on work.html, 'owner' on index.html
     theme: 'light',      // 'light' | 'dark'
@@ -18,7 +28,7 @@
     diffFilter: 'all',   // 'all' | 'added' | 'modified' | 'cancelled' | 'supplied'
     viewTab: 'scope',    // 'scope' | 'changes' | 'schedule' | 'specs'
     q: '',
-    simDate: '2026-11-17',
+    simDate: getDefaultSimDate(),
     expandedItems: new Set(),
     lightboxList: [],
     lightboxIdx: 0
@@ -1171,8 +1181,9 @@
     // Schedule Simulation Date
     const simInput = $('simDate');
     if (simInput) {
+      simInput.value = state.simDate;
       simInput.addEventListener('change', () => {
-        state.simDate = simInput.value || '2026-11-17';
+        state.simDate = simInput.value || getDefaultSimDate();
         renderScheduleTab();
         renderKpiStrip();
       });
