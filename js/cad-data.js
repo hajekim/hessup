@@ -15,7 +15,6 @@ const VIEWS3D = [{"short": "조감도", "room": "all", "title": "전체 조감�
 (function () {
 function buildScene(DATA, LAYOUT, ELEC) {
 const S = 0.001;
-// ---------- 재질 (업체 3D 시안 색 기준) ----------
 const M = {};
 const lin = c => new THREE.Color(c).convertSRGBToLinear(); // 시안 색(sRGB) → 선형
 const mat = (k, c, o = {}) => (M[k] = new THREE.MeshStandardMaterial({ color: lin(c), roughness: o.r ?? .8, metalness: o.m ?? 0, transparent: o.t != null, opacity: o.t ?? 1, emissive: lin(o.e || 0x000000), emissiveIntensity: o.ei ?? 1, side: o.side ?? THREE.FrontSide }));
@@ -61,15 +60,12 @@ function prism(pts, z0, z1, m, parent = cur) {
 }
 
 const CEIL = 2300;
-// ---------- 바닥·천장 ----------
 box(-560, -210, 12110, 8810, -30, 0, 'floor', root, false);
 [[5001, 6800, 6302, 8600], [6500, 5999, 8001, 8600]].forEach(([a, b, c, d]) => box(a, b, c, d, 0, 4, 'bathFloor', root, false));
 box(-560, -210, 12110, 8810, CEIL, CEIL + 10, 'ceil', ceilG, false);
 
-// ---------- 벽 (조명도면 벽 43개) ----------
 DATA.walls.forEach(([x, y, w, h]) => box(x, y, x + w, y + h, 0, CEIL, 'wall'));
 
-// ---------- 창: 창대·인방·유리 ----------
 [
   { x0: -210, x1: 0, y0: 269, y1: 4491, sill: 150, head: 2200 },      // 거실 확장부 이중창
   { x0: 9502, x1: 9721, y0: 899, y1: 2400, sill: 900, head: 2100 },   // 침실2
@@ -83,7 +79,6 @@ DATA.walls.forEach(([x, y, w, h]) => box(x, y, x + w, y + h, 0, CEIL, 'wall'));
   box(xm - 30, w.y0, xm + 30, w.y1, w.sill, w.sill + 40, 'white'); box(xm - 30, w.y0, xm + 30, w.y1, w.head - 40, w.head, 'white');
 });
 
-// ---------- 문 (열린 상태, 딥오크) ----------
 DATA.doors.forEach(d => {
   const [hx, hy] = d.hinge, [lx, ly] = d.leaf;
   const len = Math.hypot(lx - hx, ly - hy), ang = Math.atan2(ly - hy, lx - hx);
@@ -94,7 +89,6 @@ DATA.doors.forEach(d => {
 for (let x = 4870; x < 5840; x += 60) box(x, 1760, x + 22, 1840, 0, CEIL - 20, 'oak');
 box(4851, 1785, 5852, 1815, 0, CEIL - 20, 'glass', root, false);
 
-// ---------- 붙박이 (11/17 확정 가구 제작도면 5종 정밀 반영) ----------
 // 1. 주방 하부장 (예림 오크딥, 걸레받이 H150 + 도어 H730 = H880, 식세기 개구부 600×818) + 칸스톤 에덴그레이 상판 (H880-900)
 box(11100, 3600, 11702, 5199, 150, 880, 'oak'); box(10061, 5199, 11702, 5799, 150, 880, 'oak');
 box(11130, 3000, 11702, 5199, 0, 150, 'oak'); box(10091, 5229, 11702, 5799, 0, 150, 'oak'); // 걸레받이 H150
@@ -138,7 +132,6 @@ box(5850, 0, 6200, 960, 420, 456, 'oak'); // 벤치 의자 상판 (36T 오크딥
 box(6182, 0, 6200, 960, 456, 876, 'oak'); // 벤치 의자 뒷판 (오크딥 420×960)
 box(5852, 0, 6200, 960, 1380, CEIL, 'dewy'); // 벤치 상부장 (듀이클라우드 도어 + 오크딥 엣지)
 
-// ---------- 천장 조명 (조명도면 위치) ----------
 const lightG = new THREE.Group(); ceilG.add(lightG);
 DATA.fixtures.forEach(f => {
   if (f.t === 'DL51' || f.t === 'WP75' || f.t === 'SPOT') cyl(f.x, f.y, f.t === 'WP75' ? 45 : 32, CEIL - 6, CEIL, 'light', 16, lightG);
@@ -156,7 +149,6 @@ DATA.fixtures.forEach(f => {
   }
 });
 
-// ---------- 가구 ----------
 cur = furnG;
 const F = Object.fromEntries(LAYOUT.furniture.map(f => [f.id, f]));
 const A = Object.fromEntries(LAYOUT.appliances.map(a => [a.id, a]));
@@ -200,7 +192,6 @@ tchair(F.tc1); tchair(F.tc2);
   legs(x, y, x1, y1 - 60, 150, 'birch', 60, 0); box(x + 40, y + 40, x1 - 40, y1 - 80, 330, 560, 'white');
   box(x + 30, y + 30, x1 - 30, y1 - 600, 560, 600, 'linen'); box(x + 200, y1 - 520, x + 900, y1 - 160, 560, 680, 'white'); box(x1 - 900, y1 - 520, x1 - 200, y1 - 160, 560, 680, 'white'); }
 
-// ---------- 가전 ----------
 cur = appG;
 { const a = A.fridge; box(a.x, a.y, a.x + a.rw, a.y + a.rh, 0, 1180, 'clay'); box(a.x, a.y, a.x + a.rw, a.y + a.rh, 1190, a.h, 'beige'); box(a.x + 455, a.y - 2, a.x + 459, a.y + 2, 0, a.h, 'frame', root, false); }
 { const a = A.dw; box(a.x - 4, a.y, a.x + a.rw, a.y + a.rh, 0, a.h, 'beige'); }
@@ -215,7 +206,6 @@ cur = appG;
   [[a.x + 120, a.y + 40], [a.x + a.rw - 140, a.y + 40], [a.x + 120, a.y + a.rh - 60], [a.x + a.rw - 140, a.y + a.rh - 60]].forEach(([x, y]) => box(x, y, x + 20, y + 20, 0, 560, 'beige'));
   box(a.x + 100, cy - 40, a.x + a.rw - 100, cy + 40, 520, 545, 'beige'); }
 
-// ---------- 시스템행거 (에넥스 링크, 추천 B안) + 책상 ----------
 LAYOUT.plans.forEach(plan => { hangerG[plan.id] = cur = new THREE.Group(); root.add(cur); cur.visible = plan.id === 'B';
 plan.modules.forEach(m => {
   const xs = m.poly.map(p => p[0]), ys = m.poly.map(p => p[1]);
@@ -237,7 +227,6 @@ plan.modules.forEach(m => {
 });
 }); cur = root;
 
-// ---------- 빛 ----------
 const amb = new THREE.AmbientLight(0xffffff, .22), hemi = new THREE.HemisphereLight(0xffffff, 0x9c8a74, .35); scene.add(amb, hemi);
 amb.userData = { day: .22, night: .05 }; hemi.userData = { day: .35, night: .06 }; dayLights.push(amb, hemi);
 const sun = new THREE.DirectionalLight(0xfff3e0, .75);
@@ -253,7 +242,6 @@ Object.assign(sun.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near:
 
 lightG.traverse(o => o.castShadow = false);
 
-// ---------- 가구·가전·행거 외곽선 (흰 벽·흰 가전 구별용) ----------
 const edgeMat = new THREE.LineBasicMaterial({ color: 0x2b2622, transparent: true, opacity: .75 });
 function outline(group) {
   const meshes = []; group.traverse(o => { if (o.isMesh) meshes.push(o); });
@@ -261,7 +249,6 @@ function outline(group) {
 }
 [furnG, appG, ...Object.values(hangerG)].forEach(outline);
 
-// ---------- 전열 (콘센트·스위치·랜) : 가장 가까운 벽면에 판을 붙임 ----------
 const elecG = new THREE.Group(); root.add(elecG);
 if (ELEC) {
   const EC = { STD: 0x3d4349, DED: 0xc92a2a, WP: 0x1864ab, SW: 0x2b8a3e, LAN: 0x862e9c };

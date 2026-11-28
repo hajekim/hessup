@@ -31,7 +31,7 @@
       <div class="header-controls">
         <!-- Standalone Floorplan Link (plan.html?from=work) -->
         <a class="theme-toggle-btn" href="./plan.html?from=work" title="전체화면 조명·전열·가구 배치 평면도와 3D 모형 페이지 열기" style="text-decoration:none;">
-          <span>📐 전체화면 평면도·3D ↗</span>
+          <span>전체화면 평면도·3D ↗</span>
         </a>
 
         <!-- Theme Toggle -->
@@ -91,7 +91,7 @@
           <div class="stage-viewport" id="stage-panel-cad" role="tabpanel" aria-labelledby="submode-tab-cad" hidden>
             <div class="cad-toolbar">
               <div class="cad-btn-group" role="group" aria-label="CAD 레이어 표시">
-                <button type="button" class="cad-tool-btn is-active" data-cad-layer="shopPins" aria-pressed="true">📐 11/17 가구도면 핀 (5)</button>
+                <button type="button" class="cad-tool-btn is-active" data-cad-layer="shopPins" aria-pressed="true">11/17 가구도면 핀 (5)</button>
                 <button type="button" class="cad-tool-btn is-active" data-cad-layer="fixtures" aria-pressed="true">조명 기구</button>
                 <button type="button" class="cad-tool-btn is-active" data-cad-layer="elec" aria-pressed="true">콘센트 · 스위치</button>
                 <button type="button" class="cad-tool-btn" data-cad-layer="ldims" aria-pressed="false">설계 치수선</button>
@@ -109,15 +109,15 @@
             <!-- Quick Pin-to-Drawing Bar (11/17 5 Shop Drawings) -->
             <div class="shop-pin-bar" id="cad-shop-pin-bar" role="group" aria-label="11/17 가구 제작도면 바로가기">
               <span class="shop-pin-bar-label">도면 핀 바로열기:</span>
-              <button type="button" class="shop-pin-chip" data-shop-pin="kitchen">📐 주방 상하부장·냉장고장</button>
-              <button type="button" class="shop-pin-chip" data-shop-pin="cafe">📐 카페장 (DP장)</button>
-              <button type="button" class="shop-pin-chip" data-shop-pin="living">📐 거실 무지주선반·수납장</button>
-              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_left">📐 왼쪽 신발장 (거울)</button>
-              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_right">📐 오른쪽 벤치 신발장</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="kitchen">주방 상하부장·냉장고장</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="cafe">카페장 (DP장)</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="living">거실 무지주선반·수납장</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_left">왼쪽 신발장 (거울)</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_right">오른쪽 벤치 신발장</button>
             </div>
             <!-- Hanger B Plan H1100 Switch Interference Warning -->
             <div class="hanger-warning-banner" id="hanger-warning-banner">
-              <strong>[! 스위치 간섭 주의 · B안]</strong> 침실2 문 옆 기존 스위치(H1100 추정)와 시스템행거 프레임 간격 확인 필요 — 서랍 돌출(D500) 및 문 회전반경(6,401~7,221) 간섭 없음 확인됨
+              <strong>[! 스위치 간섭 주의 · B안]</strong> 침실2 문 옆 기존 스위치(H1100 추정)와 시스템행거 프레임 간격 확인 필요 (서랍 돌출 D500 및 문 회전반경 6,401-7,221 간섭 없음 확인)
             </div>
             <div class="cad-canvas-wrap" id="cad-canvas-wrap">
               <svg id="cad-svg" class="cad-svg" role="group" aria-label="1/60 정밀 배선 및 가구 배치 CAD 도면"></svg>
@@ -136,10 +136,10 @@
             </div>
             <div class="shop-pin-bar" id="v3-shop-pin-bar" role="group" aria-label="3D 시점 연동 가구 제작도면 바로가기">
               <span class="shop-pin-bar-label">11/17 제작도면 · 시안 대조:</span>
-              <button type="button" class="shop-pin-chip" data-shop-pin="kitchen">📐 주방 제작도면 + 3D</button>
-              <button type="button" class="shop-pin-chip" data-shop-pin="cafe">📐 카페장 제작도면 + 3D</button>
-              <button type="button" class="shop-pin-chip" data-shop-pin="living">📐 거실 가구도면 + 3D</button>
-              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_left">📐 현관 신발장 1·2 도면 + 3D</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="kitchen">주방 제작도면 + 3D</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="cafe">카페장 제작도면 + 3D</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="living">거실 가구도면 + 3D</button>
+              <button type="button" class="shop-pin-chip" data-shop-pin="shoe_left">현관 신발장 1·2 도면 + 3D</button>
             </div>
             <div class="view3d-wrap" id="view3d-wrap">
               <div class="view3d-canvas" id="v3canvas"></div>
@@ -272,12 +272,12 @@
             <div class="dossier-section-header">
               <div>
                 <h2 class="dossier-section-title" id="appliances-title">가전 9종 개구부 · 반입 경로 · 전용 콘센트 체크표</h2>
-                <p class="brand-subtitle">고객 보유/신규 가전 9종의 W×D×H 실측 치수와 가구장 개구부·전열 매칭 결과입니다.</p>
+                <p class="brand-subtitle">고객 보유/신규 가전 9종의 W×D×H 측정 치수와 가구장 개구부·전열 매칭 결과입니다.</p>
               </div>
             </div>
             <!-- WashCombo Critical Entry Alert -->
             <div class="appliance-warning-alert" id="washcombo-alert">
-              [! 반입 경로 필수 확인] 현관·터닝도어 통과 불가 — 침실2(입구 좌측방) 외창 탈거 후 사다리차 반입 필수 (워시콤보 FC2521TX6CX.CKOR · 본체 W700×D830×H1,350mm)
+              [! 반입 경로 필수 확인] 현관·터닝도어 통과 불가: 침실2(입구 좌측방) 외창 탈거 후 사다리차 반입 필수 (워시콤보 FC2521TX6CX.CKOR · 본체 W700×D830×H1,350mm)
             </div>
             <div class="table-wrapper" tabindex="0" role="region" aria-labelledby="appliances-title">
               <table class="studio-table is-responsive-stack" id="applianceTable"></table>

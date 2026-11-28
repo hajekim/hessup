@@ -1,4 +1,4 @@
-/* HESSUP STUDIO — SpatialStage Controller (2D Zone Map, Full-Fidelity 1/60 CAD + Pin-to-Drawing, Large 3D Walk, Balcony 1 Thermal) */
+/* HESSUP STUDIO: SpatialStage Controller (2D Zone Map, Full-Fidelity 1/60 CAD + Pin-to-Drawing, Large 3D Walk, Balcony 1 Thermal) */
 (function () {
   const THERMAL_CUTS = [
     { id: 'TH-01', src: './thermal_balcony1/01_living_floor_thermal.jpg', title: '01 · 거실 확장부 바닥 난방 열화상', temp: '45.2℃', desc: '거실 확장부 XL 난방 배관 순환 열 분포 확인', roomId: '거실', items: ['1-c-03', '2-b-01'] },
@@ -17,7 +17,7 @@
   const SHOP_DRAWINGS = [
     {
       id: 'kitchen',
-      pinLabel: '📐 주방 가구도면',
+      pinLabel: '주방 가구도면',
       title: '11/17 주방 상하부장 · 냉장고장 제작도면 (A3 1/30)',
       roomId: '주방',
       src: './shop_drawings/kitchen_cabinet.png',
@@ -42,7 +42,7 @@
     },
     {
       id: 'cafe',
-      pinLabel: '📐 카페장 도면',
+      pinLabel: '카페장 도면',
       title: '11/17 주방 카페장 (DP장) 제작도면 (A4 1/20)',
       roomId: '주방',
       src: './shop_drawings/cafe_cabinet.png',
@@ -66,7 +66,7 @@
     },
     {
       id: 'living',
-      pinLabel: '📐 거실 가구도면',
+      pinLabel: '거실 가구도면',
       title: '11/17 거실 무지주 선반 2단 · 하부 수납장 제작도면 (A4 1/20)',
       roomId: '거실',
       src: './shop_drawings/living_shelf.png',
@@ -90,7 +90,7 @@
     },
     {
       id: 'shoe_left',
-      pinLabel: '📐 신발장 1 (좌)',
+      pinLabel: '신발장 1 (좌)',
       title: '11/17 현관 왼쪽 신발장 (은경 거울도어 · 하부띄움) 제작도면 (A4 1/20)',
       roomId: '현관',
       src: './shop_drawings/shoe_left.png',
@@ -114,7 +114,7 @@
     },
     {
       id: 'shoe_right',
-      pinLabel: '📐 신발장 2 (우·벤치)',
+      pinLabel: '신발장 2 (우·벤치)',
       title: '11/17 현관 오른쪽 벤치형 신발장 · 우산꽂이 제작도면 (A4 1/20)',
       roomId: '현관',
       src: './shop_drawings/shoe_right.png',
@@ -252,7 +252,6 @@
     }
   }
 
-  /* ---------- Inspect a 11/17 Furniture Shop Drawing Pin ---------- */
   function inspectShopDrawing(pinId, openModal = false) {
     if (pinId === 'balcony1') {
       if (!stageState.hasThermal) return;
@@ -267,7 +266,7 @@
             <img src="./thermal_balcony1/05_balcony1_corner_loop_left.jpg" alt="발코니1 좌측 코너 루프" style="width:100%; height:90px; object-fit:cover; border-radius:6px; cursor:pointer; border:1px solid var(--border-subtle);" data-lightbox-group="thermal" data-lightbox-idx="4">
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button type="button" class="copy-action-btn" data-open-thermal-lightbox="0">열화상 10컷 크게 보기 🔍</button>
+            <button type="button" class="copy-action-btn" data-open-thermal-lightbox="0">열화상 10컷 크게 보기</button>
             <button type="button" class="jump-pill-btn" data-jump-item="1-c-03">1-c-03 난방연장 내역 ↘</button>
             <button type="button" class="jump-pill-btn" data-jump-item="2-e-05">2-e-05 발코니 타일 ↘</button>
           </div>
@@ -306,7 +305,7 @@
         ${renderThumbs ? `<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:6px;">${renderThumbs}</div>` : ''}
         <ul style="margin:0; padding-left:16px; font-size:11.5px; color:var(--text-secondary); display:flex; flex-direction:column; gap:3px;">${bullets}</ul>
         <div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:2px;">
-          <button type="button" class="copy-action-btn" data-lightbox-group="shop" data-lightbox-idx="${shopIdx}">📐 제작도면 + 3D 시안 크게 보기 🔍</button>
+          <button type="button" class="copy-action-btn" data-lightbox-group="shop" data-lightbox-idx="${shopIdx}">제작도면 + 3D 시안 크게 보기</button>
           ${itemPills}
         </div>
       </div>`
@@ -324,7 +323,6 @@
     }
   }
 
-  /* ---------- Submode 1: Zone Map SVG ---------- */
   function renderZoneMap(siteContent, activeRoom) {
     const svg = document.getElementById('zone-map-svg');
     if (!svg || !siteContent) return;
@@ -363,7 +361,6 @@
     }
   }
 
-  /* ---------- Submode 2: Full-Fidelity 1/60 Vector CAD (100% plan.html rendering + 11/17 Shop Pins) ---------- */
   function renderCadSvg() {
     const svg = document.getElementById('cad-svg');
     const cad = window.HESSUP_CAD;
@@ -656,7 +653,7 @@
             <circle cx="${o.x - 40}" cy="${y}" r="22" fill="${col}" />
             <circle cx="${o.x + 40}" cy="${y}" r="22" fill="${col}" />`;
         }
-        elecNodes.push(`<g class="cad-symbol" tabindex="0" role="button" aria-label="[현장실측 전열·통신] ${esc(name)} (${esc(o.room)})" data-sym-kind="현장실측 전열·통신" data-sym-name="${esc(name)} [현장사진 ${esc(o.photo)}]" data-sym-spec="높이 ${esc(o.h)}mm · ${esc(o.room)}" data-sym-note="${esc(o.note)}" data-sym-x="${o.x}" data-sym-y="${y}" data-sym-items="${itemCode}" data-tip="${esc(tip)}" style="cursor:pointer;">${shape}</g>`);
+        elecNodes.push(`<g class="cad-symbol" tabindex="0" role="button" aria-label="[현장 측정 전열·통신] ${esc(name)} (${esc(o.room)})" data-sym-kind="현장 측정 전열·통신" data-sym-name="${esc(name)} [현장사진 ${esc(o.photo)}]" data-sym-spec="높이 ${esc(o.h)}mm · ${esc(o.room)}" data-sym-note="${esc(o.note)}" data-sym-x="${o.x}" data-sym-y="${y}" data-sym-items="${itemCode}" data-tip="${esc(tip)}" style="cursor:pointer;">${shape}</g>`);
       });
 
       if (ELEC.panel) {
@@ -732,7 +729,7 @@
         pinNodes.push(`<g class="cad-shop-pin" data-shop-pin-svg="balcony1" tabindex="0" role="button" aria-label="발코니1 바닥 열화상 10컷 보기" data-tip="<strong>발코니1 바닥 난방 열화상 (10컷)</strong><br>최고 58.6℃ · 거실 확장부 연결 배관 경로 확인">
           <rect x="30" y="4850" width="840" height="3650" fill="${isBalSel ? 'rgba(217, 72, 15, 0.20)' : 'rgba(217, 72, 15, 0.06)'}" stroke="#d9480f" stroke-width="22" stroke-dasharray="60 45" rx="24" />
           <rect class="pin-pill" x="-110" y="7200" width="1120" height="250" rx="125" fill="#b43c18" stroke="#ffffff" stroke-width="24" />
-          <text x="450" y="7365" text-anchor="middle" font-size="118" font-weight="700" fill="#ffffff" pointer-events="none">🔥 열화상 10컷</text>
+          <text x="450" y="7365" text-anchor="middle" font-size="118" font-weight="700" fill="#ffffff" pointer-events="none">열화상 10컷</text>
         </g>`);
       }
 
@@ -763,7 +760,6 @@
     svg.innerHTML = parts.join('');
   }
 
-  /* ---------- Submode 3: 3D Walk (Three.js Lazy Loader + Interactive Minimap) ---------- */
   function loadScript(src) {
     return new Promise((resolve, reject) => {
       const existing = document.querySelector(`script[src="${src}"]`);
@@ -808,7 +804,7 @@
           ).join('');
         }
         if (cap && cad.VIEWS3D?.[0]) {
-          cap.innerHTML = `<b>${esc(cad.VIEWS3D[0].title)}</b> — ${esc(cad.VIEWS3D[0].note || '')}`;
+          cap.innerHTML = `<b>${esc(cad.VIEWS3D[0].title)}</b> · ${esc(cad.VIEWS3D[0].note || '')}`;
         }
         setupMinimap(cad.DATA, cad.ROOMS);
         window.addEventListener('resize', () => {
@@ -874,7 +870,7 @@
       const y = ((e.clientY - r.top) * (H / r.height) - oy) / s;
       stageState.plan3d.walkTo(Math.max(-400, Math.min(11600, x)), Math.max(100, Math.min(8500, y)));
       const cap = document.getElementById('v3caption');
-      if (cap) cap.innerHTML = `<b>눈높이 이동</b> · x ${fmt(x)} · y ${fmt(y)} mm — 마우스로 둘러보세요.`;
+      if (cap) cap.innerHTML = `<b>눈높이 이동</b> · x ${fmt(x)} · y ${fmt(y)} mm (마우스로 둘러보세요)`;
     };
 
     let mdrag = false;
@@ -887,7 +883,6 @@
     canvas.addEventListener('pointerup', () => { mdrag = false; });
   }
 
-  /* ---------- Submode 4: Balcony 1 Thermal 10-Cut & Tab 4 Shop Drawings Gallery ---------- */
   function renderThermalAndShopGalleries() {
     const stageGrid = document.getElementById('stage-thermal-grid');
     const tabGallery = document.getElementById('thermalGallery');
@@ -939,7 +934,6 @@
     }
   }
 
-  /* ---------- Submode Switching & Room Camera Sync ---------- */
   function setSubmode(submode) {
     stageState.submode = submode;
     document.querySelectorAll('[data-submode]').forEach(btn => {
@@ -990,7 +984,6 @@
     }
   }
 
-  /* ---------- Event Wiring ---------- */
   function bindStageEvents(siteContent) {
     // Expand / Collapse Button
     const expandBtn = document.getElementById('stage-expand-btn');
@@ -1089,7 +1082,7 @@
         const warnBanner = document.getElementById('hanger-warning-banner');
         if (warnBanner) {
           warnBanner.innerHTML = planId === 'B'
-            ? '<strong>[! 스위치 간섭 주의 · B안]</strong> 침실2 문 옆 기존 스위치(H1100 추정)와 시스템행거 프레임 간격 확인 필요 — 서랍 돌출(D500) 및 문 회전반경(6,401~7,221) 간섭 없음 확인됨'
+            ? '<strong>[! 스위치 간섭 주의 · B안]</strong> 침실2 문 옆 기존 스위치(H1100 추정)와 시스템행거 프레임 간격 확인 필요 (서랍 돌출 D500 및 문 회전반경 6,401-7,221 간섭 없음 확인)'
             : '<strong>[! 서랍·창문 간섭 주의 · A안]</strong> 침실2 4모듈 배치 시 코너장과 800 서랍장이 겹치며, 책상이 창문(2-c-02) 앞을 가립니다. B안(3모듈)을 추천합니다.';
         }
         renderCadSvg();
@@ -1161,7 +1154,7 @@
           updateInspector(
             `[${kind}] ${name}`,
             `x ${Number(sx).toLocaleString('ko-KR')} · y ${Number(sy).toLocaleString('ko-KR')} mm`,
-            `<div><strong>${esc(spec)}</strong> — ${esc(note)}</div>${jumpHtml}`
+            `<div><strong>${esc(spec)}</strong> · ${esc(note)}</div>${jumpHtml}`
           );
           return true;
         }
@@ -1311,7 +1304,7 @@
         stageState.plan3d.view(idx, !reduced);
         const v = window.HESSUP_CAD?.VIEWS3D?.[idx];
         const cap = document.getElementById('v3caption');
-        if (cap && v) cap.innerHTML = `<b>${esc(v.title || v.name)}</b> — ${esc(v.note || v.caption || '')}`;
+        if (cap && v) cap.innerHTML = `<b>${esc(v.title || v.name)}</b> · ${esc(v.note || v.caption || '')}`;
       });
     }
 

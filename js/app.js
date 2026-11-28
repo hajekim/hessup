@@ -1,4 +1,4 @@
-/* HESSUP STUDIO — Core Application Controller (Physical index.html Encrypted Owner / work.html Zero-Price Split, Room Cross-Filter, 4 Views, Lightbox) */
+/* HESSUP STUDIO: Core Application Controller (Physical index.html Encrypted Owner / work.html Zero-Price Split, Room Cross-Filter, 4 Views, Lightbox) */
 (function () {
   const PAGE_MODE = document.body?.dataset?.mode === 'work' ? 'work' : 'owner';
   const ENCRYPTED_DATA_FILE = './data.enc.json';
@@ -124,7 +124,6 @@
     if (el) el.textContent = msg;
   }
 
-  /* ---------- Status Badge Dual Encoding ---------- */
   function getItemStatusKind(it) {
     const st = it.change_status || 'normal';
     const note = `${it.note_raw || ''} ${it.inference_note || ''} ${it.material || ''}`;
@@ -145,7 +144,6 @@
     }
   }
 
-  /* ---------- Search & Synonym Expansion ---------- */
   function expandSearchTokens(rawQuery) {
     const q = (rawQuery || '').trim().toLowerCase();
     if (!q) return { raw: '', keywords: [], matchRooms: new Set(), matchTrades: new Set() };
@@ -186,7 +184,6 @@
     return rooms.includes(room) || rooms.includes('전체') || it.allocation_type === 'global_shared';
   }
 
-  /* ---------- 1. Header & Mode UI ---------- */
   function updateModeUI() {
     document.documentElement.setAttribute('data-mode', state.mode);
     const sub = $('header-subtitle');
@@ -202,7 +199,6 @@
     });
   }
 
-  /* ---------- 2. KPI Dossier Strip ---------- */
   function getDiffCounts() {
     const changed = (DB.qV5?.items || []).filter(it => getItemStatusKind(it) !== 'normal');
     const counts = { all: changed.length, added: 0, modified: 0, cancelled: 0, supplied: 0 };
@@ -276,7 +272,6 @@
     }
   }
 
-  /* ---------- 3. Room Filter Bar ---------- */
   function renderRoomFilterBar() {
     const listEl = $('room-chip-list');
     const resetBtn = $('room-reset-btn');
@@ -297,7 +292,6 @@
     if (resetBtn) resetBtn.hidden = state.room === '전체';
   }
 
-  /* ---------- 4. Tab 1: Room & Trade Scope (#panel-scope) ---------- */
   function renderTradeFilterBar() {
     const bar = $('tradeFilter');
     if (!bar || !DB.qV5) return;
@@ -518,7 +512,6 @@
     renderCostStatementTables();
   }
 
-  /* ---------- 5. 11-Row Cost Statement (#costTable & #costTableScope) ---------- */
   function renderCostStatementTables() {
     const t1 = $('costTableScope');
     const t2 = $('costTable');
@@ -583,7 +576,6 @@
     if (t2) t2.innerHTML = html;
   }
 
-  /* ---------- 6. Tab 2: Changes, Options & Local Extension Slot (#panel-changes) ---------- */
   function renderLocalExtensionSlot() {
     const slot = $('local-extension-slot');
     if (!slot) return;
@@ -774,7 +766,6 @@
       </tbody>`;
   }
 
-  /* ---------- 7. Tab 3: 32-Day Schedule & D-Day (#panel-schedule) ---------- */
   function renderScheduleTab() {
     const briefEl = $('todayBriefing');
     const ganttEl = $('ganttChart');
@@ -850,7 +841,6 @@
     </div>`;
   }
 
-  /* ---------- 8. Tab 4: Appliances, Materials & Media (#panel-specs) ---------- */
   function renderSpecsTab() {
     const searchCtx = expandSearchTokens(state.q);
     const appTbl = $('applianceTable');
@@ -930,7 +920,6 @@
     }
   }
 
-  /* ---------- 9. Bidirectional Jump & Flash ---------- */
   function setViewTab(tabId) {
     state.viewTab = tabId;
     document.querySelectorAll('[data-view-tab]').forEach(btn => {
@@ -979,7 +968,6 @@
   }
   window.jumpToItem = jumpToItem;
 
-  /* ---------- 10. Accessible Lightbox (<dialog>) ---------- */
   function openLightbox(group, idx, initialSlideOffset = 0) {
     const dlg = $('studio-lightbox');
     if (!dlg) return;
@@ -1041,7 +1029,6 @@
     if ($('lightbox-counter')) $('lightbox-counter').textContent = `${state.lightboxIdx + 1} / ${state.lightboxList.length}`;
   }
 
-  /* ---------- Refresh All Views ---------- */
   function refreshAll() {
     updateModeUI();
     renderKpiStrip();
@@ -1061,7 +1048,6 @@
     syncUrlHash();
   }
 
-  /* ---------- Global Event Listeners ---------- */
   function bindAppEvents() {
     // Theme Switcher
     const themeBtn = $('theme-toggle-btn');
@@ -1262,7 +1248,6 @@
     });
   }
 
-  /* ---------- Bootstrap (Encrypted Owner / Zero-Price Work / Local Dev) ---------- */
   async function fetchJsonSafe(url) {
     if (unlockedBundle) {
       const key = url.replace(/^\.\//, '');
@@ -1271,7 +1256,8 @@
     try {
       const res = await fetch(url, { cache: 'no-store' });
       return res.ok ? await res.json() : null;
-    } catch {
+    } catch (err) {
+      console.debug(`Optional JSON fetch failed (${url}):`, err);
       return null;
     }
   }
@@ -1294,7 +1280,8 @@
     let res;
     try {
       res = await fetch(ENCRYPTED_DATA_FILE, { cache: 'no-store' });
-    } catch {
+    } catch (err) {
+      console.debug('Encrypted bundle probe failed (local dev fallback):', err);
       return;
     }
     if (!res.ok) return;
@@ -1343,8 +1330,8 @@
       tag.textContent = await res.text();
       document.body.appendChild(tag);
       await Promise.all(studioExtensions.map(ext => ext.ready));
-    } catch {
-      // 배포본에는 없는 파일이므로 무시한다
+    } catch (err) {
+      console.debug('Optional local extension unavailable:', err);
     }
   }
 
@@ -1353,7 +1340,8 @@
     try {
       const res = await fetch('./thermal_balcony1/01_living_floor_thermal.jpg', { method: 'HEAD', cache: 'no-store' });
       return res.ok;
-    } catch {
+    } catch (err) {
+      console.debug('Thermal asset probe unavailable:', err);
       return false;
     }
   }

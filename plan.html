@@ -176,7 +176,6 @@ const el = (tag, attrs = {}, parent) => {
 };
 const fmt = n => Math.round(n).toLocaleString('ko-KR');
 
-// ---------- 뷰포트 ----------
 const BOUNDS = { x: -1100, y: -1400, w: 13300, h: 10500 };
 let view = { ...BOUNDS };
 const applyView = () => svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
@@ -191,7 +190,6 @@ function toMM(evt) {
   return p.matrixTransform(svg.getScreenCTM().inverse());
 }
 
-// ---------- 레이어 ----------
 const g = {};
 ['grid', 'rooms', 'ref', 'walls', 'furniture', 'appliances', 'pipes', 'hangers', 'doors', 'cove', 'fixtures', 'ldims', 'elec', 'notes', 'measure', 'labels']
   .forEach(id => g[id] = el('g', { id: 'L-' + id }, svg));
@@ -282,7 +280,6 @@ DATA.fixtures.forEach(f => {
   n.setAttribute('data-tip', tipFor(f, t));
 });
 
-// ---------- 전열 (콘센트·스위치·LAN·분전함) ----------
 const ek = {};
 ['STD', 'DED', 'WP', 'SW', 'LAN', 'PANEL'].forEach(id => ek[id] = el('g', { 'data-egroup': id }, g.elec));
 const eHeights = el('g', {}, g.elec), eMemos = el('g', {}, g.elec);
@@ -346,7 +343,6 @@ ELEC.memos.forEach(m => {
   t.textContent = m.t;
 });
 
-// ---------- 침대·가구·가전·행거 ----------
 const poly = pts => pts.map(p => p.join(',')).join(' ');
 const rp = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
 function boxLabel(parent, x, y, w, h, lines, size = 110, color = '#3d3730') {
@@ -444,7 +440,6 @@ ROOMS.forEach(r => {
   }
 });
 
-// ---------- 패널 ----------
 const counts = {};
 DATA.fixtures.forEach(f => counts[f.t] = (counts[f.t] || 0) + 1);
 counts.RAIL = 1;
@@ -596,7 +591,6 @@ ETYPES.filter(t => t.legend !== undefined).forEach(t => {
 });
 document.getElementById('ecmpNote').innerHTML = "<b class=\"warn\">현장 확인</b> ① 주방 콘센트 높이 표기: 광파오븐(MM) H450, 식기세척기(DW) H1100. 광파오븐은 상판 위, 식기세척기는 하부장 매립 위치. ② 건조기 단독(DM)은 범례에만 있고 평면에는 없음. 발코니3 워시콤보 자리는 높이 표기 없는 2구 1개 — 전용 회로 여부 확인. ③ 에어컨 단독 콘센트는 거실 1곳. 범례 대비 수량: 2구 일반 10 / 19, 3구 스위치 5 / 8(침실 기존 라인 포함 추정), LAN 2 / 5(거실 2 + 침실 3곳 인터넷 추가), 방우형 2세트(기호 4) = 범례 2. <b>변경 안내 (도면 기호는 이전 상태)</b>: 화장실 스위치 3구로, 주방 스위치 기존 2구 → 5구로, 거실 스위치는 유럽형으로 변경. 침실·거실 콘센트는 기존 위치 그대로, 바뀌는 곳은 주방뿐.";
 
-// ---------- 상호작용 ----------
 const stage = document.getElementById('stage'), tip = document.getElementById('tip'), readout = document.getElementById('readout');
 let drag = null, measuring = false, mStart = null, mTemp = null;
 
@@ -671,7 +665,6 @@ window.addEventListener('keydown', e => { if (e.key === 'Escape' && measuring) {
 window.addEventListener('resize', fit);
 fit();
 
-// ---------- 3D (처음 누를 때 three.js를 불러옴) ----------
 const VIEWS3D = [{"short": "조감도", "room": "all", "title": "전체 조감도 (남서쪽 위)", "aerial": true, "fov": 45, "pos": [-3500, 13500, 10500], "target": [5900, 4300, 0], "note": "천장을 걷어낸 모형. 거실(왼쪽 위)·주방(오른쪽)·침실 3곳(아래). 가구·가전·행거는 평면도 배치(행거 B안) 그대로."}, {"short": "조감도 2", "room": "all", "title": "전체 조감도 (북동쪽 위)", "aerial": true, "fov": 45, "pos": [14500, -4500, 10000], "target": [5900, 4300, 0], "note": "반대쪽에서 본 모형. 침실2 행거·책상, 발코니3 워시콤보, 냉장고장이 보이는 방향."}, {"short": "거실 1", "room": "liv", "title": "거실 · 소파 뒤에서 TV 쪽", "pos": [3300, 350, 1450], "target": [2500, 4500, 800], "note": "K체어 2인용(머스터드)·1인용(타프그린)·리빙테이블, TV 포제 55\", 왼쪽 스탠드 에어컨. 오른쪽 위로 주방 방향."}, {"short": "거실 2", "room": "liv", "title": "거실 · TV 옆에서 창·선반장 쪽", "pos": [5600, 4300, 1500], "target": [1200, 600, 900], "note": "확장부 이중창(왼쪽), 하부장 + 띄움 선반 2단(위쪽 벽), 현관 키큰 신발장·간살 중문(오른쪽)."}, {"short": "주방 1", "room": "kit", "title": "주방·식당 · 거실에서 주방 쪽", "pos": [5700, 3700, 1500], "target": [10800, 5000, 900], "note": "가리모쿠60 다이닝 1500(세로 배치)·벤치·T체어 2, 펜던트, ㄱ자 싱크대·냉장고장, 오른쪽 위 카페장(DP)."}, {"short": "주방 2", "room": "kit", "title": "주방·식당 · 싱크대 쪽에서 식탁 쪽", "pos": [10900, 4900, 1550], "target": [6800, 3300, 800], "note": "식탁 짧은 변이 벽에 붙은 모습, 왼쪽 카페장(DP), 거실 방향. 오른쪽 아래 냉장고(W823)."}, {"short": "침실1 1", "room": "br1", "title": "침실1 · 방문에서 침대 쪽", "pos": [4600, 5100, 1500], "target": [2300, 7600, 600], "note": "IKEA 비에르크스네스 180×200(머리 = 아래쪽 외벽), 왼쪽 창."}, {"short": "침실1 2", "room": "br1", "title": "침실1 · 침대 발치 너머 화장대·벽걸이 에어컨", "pos": [4300, 8300, 1550], "target": [1500, 5000, 1200], "note": "위쪽 벽 왼쪽 화장대(리브 01) + 스툴, 그 위 벽걸이 에어컨(857×348)."}, {"short": "침실2 1", "room": "br2", "title": "침실2 · 방문에서 행거·스타일러 쪽", "pos": [6700, 2550, 1550], "target": [8600, 300, 1000], "note": "위쪽 벽 오른쪽 끝까지 짧은 옷장·긴 옷장(서랍)·긴 옷장(서랍), 왼쪽 벽 스타일러."}, {"short": "침실2 2", "room": "br2", "title": "침실2 · 창 쪽에서 책상·방문 쪽", "pos": [9300, 700, 1550], "target": [7000, 2300, 700], "note": "아래 벽 두닷 콰트로 1600×800 책상(창이 왼쪽), 왼쪽 위 스타일러."}, {"short": "침실3 1", "room": "br3", "title": "침실3 · 방문에서 코너장 쪽", "pos": [8500, 6150, 1550], "target": [9200, 8400, 900], "note": "왼쪽 아래 모서리 오각코너장(760×760) + 오른쪽 짧은 옷장. 코너장 위 매입등은 업체가 옮긴 위치(왼쪽 벽에서 900)."}, {"short": "침실3 2", "room": "br3", "title": "침실3 · 창 쪽에서 방문 쪽", "pos": [11500, 6300, 1550], "target": [8700, 8200, 800], "note": "오른쪽 아래 코너장·짧은 옷장, 왼쪽 위 방문."}];
 var P3 = null, p3loading = null, v3idx = 0; // var: showPlan이 먼저 참조
 const v3bar = document.getElementById('v3bar'), v3cap = document.getElementById('v3cap');
@@ -685,7 +678,6 @@ function ensure3D() {
 (function () {
 function buildScene(DATA, LAYOUT, ELEC) {
 const S = 0.001;
-// ---------- 재질 (업체 3D 시안 색 기준) ----------
 const M = {};
 const lin = c => new THREE.Color(c).convertSRGBToLinear(); // 시안 색(sRGB) → 선형
 const mat = (k, c, o = {}) => (M[k] = new THREE.MeshStandardMaterial({ color: lin(c), roughness: o.r ?? .8, metalness: o.m ?? 0, transparent: o.t != null, opacity: o.t ?? 1, emissive: lin(o.e || 0x000000), emissiveIntensity: o.ei ?? 1, side: o.side ?? THREE.FrontSide }));
@@ -731,15 +723,12 @@ function prism(pts, z0, z1, m, parent = cur) {
 }
 
 const CEIL = 2300;
-// ---------- 바닥·천장 ----------
 box(-560, -210, 12110, 8810, -30, 0, 'floor', root, false);
 [[5001, 6800, 6302, 8600], [6500, 5999, 8001, 8600]].forEach(([a, b, c, d]) => box(a, b, c, d, 0, 4, 'bathFloor', root, false));
 box(-560, -210, 12110, 8810, CEIL, CEIL + 10, 'ceil', ceilG, false);
 
-// ---------- 벽 (조명도면 벽 43개) ----------
 DATA.walls.forEach(([x, y, w, h]) => box(x, y, x + w, y + h, 0, CEIL, 'wall'));
 
-// ---------- 창: 창대·인방·유리 ----------
 [
   { x0: -210, x1: 0, y0: 269, y1: 4491, sill: 150, head: 2200 },      // 거실 확장부 이중창
   { x0: 9502, x1: 9721, y0: 899, y1: 2400, sill: 900, head: 2100 },   // 침실2
@@ -753,7 +742,6 @@ DATA.walls.forEach(([x, y, w, h]) => box(x, y, x + w, y + h, 0, CEIL, 'wall'));
   box(xm - 30, w.y0, xm + 30, w.y1, w.sill, w.sill + 40, 'white'); box(xm - 30, w.y0, xm + 30, w.y1, w.head - 40, w.head, 'white');
 });
 
-// ---------- 문 (열린 상태, 딥오크) ----------
 DATA.doors.forEach(d => {
   const [hx, hy] = d.hinge, [lx, ly] = d.leaf;
   const len = Math.hypot(lx - hx, ly - hy), ang = Math.atan2(ly - hy, lx - hx);
@@ -764,7 +752,6 @@ DATA.doors.forEach(d => {
 for (let x = 4870; x < 5840; x += 60) box(x, 1760, x + 22, 1840, 0, CEIL - 20, 'oak');
 box(4851, 1785, 5852, 1815, 0, CEIL - 20, 'glass', root, false);
 
-// ---------- 붙박이 (11/17 확정 가구 제작도면 5종 정밀 반영) ----------
 // 1. 주방 하부장 (예림 오크딥, 걸레받이 H150 + 도어 H730 = H880, 식세기 개구부 600×818) + 칸스톤 에덴그레이 상판 (H880-900)
 box(11100, 3600, 11702, 5199, 150, 880, 'oak'); box(10061, 5199, 11702, 5799, 150, 880, 'oak');
 box(11130, 3000, 11702, 5199, 0, 150, 'oak'); box(10091, 5229, 11702, 5799, 0, 150, 'oak'); // 걸레받이 H150
@@ -808,7 +795,6 @@ box(5850, 0, 6200, 960, 420, 456, 'oak'); // 벤치 의자 상판 (36T 오크딥
 box(6182, 0, 6200, 960, 456, 876, 'oak'); // 벤치 의자 뒷판 (오크딥 420×960)
 box(5852, 0, 6200, 960, 1380, CEIL, 'dewy'); // 벤치 상부장 (듀이클라우드 도어 + 오크딥 엣지)
 
-// ---------- 천장 조명 (조명도면 위치) ----------
 const lightG = new THREE.Group(); ceilG.add(lightG);
 DATA.fixtures.forEach(f => {
   if (f.t === 'DL51' || f.t === 'WP75' || f.t === 'SPOT') cyl(f.x, f.y, f.t === 'WP75' ? 45 : 32, CEIL - 6, CEIL, 'light', 16, lightG);
@@ -826,7 +812,6 @@ DATA.fixtures.forEach(f => {
   }
 });
 
-// ---------- 가구 ----------
 cur = furnG;
 const F = Object.fromEntries(LAYOUT.furniture.map(f => [f.id, f]));
 const A = Object.fromEntries(LAYOUT.appliances.map(a => [a.id, a]));
@@ -870,7 +855,6 @@ tchair(F.tc1); tchair(F.tc2);
   legs(x, y, x1, y1 - 60, 150, 'birch', 60, 0); box(x + 40, y + 40, x1 - 40, y1 - 80, 330, 560, 'white');
   box(x + 30, y + 30, x1 - 30, y1 - 600, 560, 600, 'linen'); box(x + 200, y1 - 520, x + 900, y1 - 160, 560, 680, 'white'); box(x1 - 900, y1 - 520, x1 - 200, y1 - 160, 560, 680, 'white'); }
 
-// ---------- 가전 ----------
 cur = appG;
 { const a = A.fridge; box(a.x, a.y, a.x + a.rw, a.y + a.rh, 0, 1180, 'clay'); box(a.x, a.y, a.x + a.rw, a.y + a.rh, 1190, a.h, 'beige'); box(a.x + 455, a.y - 2, a.x + 459, a.y + 2, 0, a.h, 'frame', root, false); }
 { const a = A.dw; box(a.x - 4, a.y, a.x + a.rw, a.y + a.rh, 0, a.h, 'beige'); }
@@ -885,7 +869,6 @@ cur = appG;
   [[a.x + 120, a.y + 40], [a.x + a.rw - 140, a.y + 40], [a.x + 120, a.y + a.rh - 60], [a.x + a.rw - 140, a.y + a.rh - 60]].forEach(([x, y]) => box(x, y, x + 20, y + 20, 0, 560, 'beige'));
   box(a.x + 100, cy - 40, a.x + a.rw - 100, cy + 40, 520, 545, 'beige'); }
 
-// ---------- 시스템행거 (에넥스 링크, 추천 B안) + 책상 ----------
 LAYOUT.plans.forEach(plan => { hangerG[plan.id] = cur = new THREE.Group(); root.add(cur); cur.visible = plan.id === 'B';
 plan.modules.forEach(m => {
   const xs = m.poly.map(p => p[0]), ys = m.poly.map(p => p[1]);
@@ -907,7 +890,6 @@ plan.modules.forEach(m => {
 });
 }); cur = root;
 
-// ---------- 빛 ----------
 const amb = new THREE.AmbientLight(0xffffff, .22), hemi = new THREE.HemisphereLight(0xffffff, 0x9c8a74, .35); scene.add(amb, hemi);
 amb.userData = { day: .22, night: .05 }; hemi.userData = { day: .35, night: .06 }; dayLights.push(amb, hemi);
 const sun = new THREE.DirectionalLight(0xfff3e0, .75);
@@ -923,7 +905,6 @@ Object.assign(sun.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near:
 
 lightG.traverse(o => o.castShadow = false);
 
-// ---------- 가구·가전·행거 외곽선 (흰 벽·흰 가전 구별용) ----------
 const edgeMat = new THREE.LineBasicMaterial({ color: 0x2b2622, transparent: true, opacity: .75 });
 function outline(group) {
   const meshes = []; group.traverse(o => { if (o.isMesh) meshes.push(o); });
@@ -931,7 +912,6 @@ function outline(group) {
 }
 [furnG, appG, ...Object.values(hangerG)].forEach(outline);
 
-// ---------- 전열 (콘센트·스위치·랜) : 가장 가까운 벽면에 판을 붙임 ----------
 const elecG = new THREE.Group(); root.add(elecG);
 if (ELEC) {
   const EC = { STD: 0x3d4349, DED: 0xc92a2a, WP: 0x1864ab, SW: 0x2b8a3e, LAN: 0x862e9c };
@@ -1123,11 +1103,10 @@ function initMinimap() {
 // 3D 위 조작이 2D 평면 이동·치수 재기로 새지 않게
 ['pointerdown', 'wheel', 'click', 'dblclick'].forEach(t => document.getElementById('view3d').addEventListener(t, e => e.stopPropagation()));
 document.querySelector('.stagebar').addEventListener('pointerdown', e => e.stopPropagation());
-// ---------- 3D로 들어가는 길 ----------
 // 첫 방문 안내 (한 번 닫거나 3D를 열면 다시 안 띄움)
 const HINT_KEY = 'plan3dHintSeen';
-const seen = () => { try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { return false; } };
-const markSeen = () => { try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {} document.getElementById('hint3d').hidden = true; };
+const seen = () => { try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { console.debug('localStorage read skipped:', e); return false; } };
+const markSeen = () => { try { localStorage.setItem(HINT_KEY, '1'); } catch (e) { console.debug('localStorage write skipped:', e); } document.getElementById('hint3d').hidden = true; };
 if (!seen()) document.getElementById('hint3d').hidden = false;
 document.getElementById('hint3dX').onclick = markSeen;
 // 평면에서 방을 누르면 그 자리에 '3D로 보기' (끌어서 옮긴 경우·치수 재기 중엔 무시)
